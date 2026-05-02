@@ -47,7 +47,7 @@ public final class DefaultResolver extends LocationResolver {
 
     @Override
     public boolean isPlayerPlaced(final Location location) {
-        return false;
+        return PlacedBlockTracker.isPlayerPlaced(location);
     }
 
 }

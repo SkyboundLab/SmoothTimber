@@ -45,6 +45,10 @@ public class BlockBreakListener implements Listener {
         }
 
         final Player player = event.getPlayer();
+        final Location location = event.getBlock().getLocation();
+
+        // Check if block is player-placed (PDC automatically removes the marker when block is destroyed)
+        final boolean isPlaced = Locator.isPlayerPlaced(location);
 
         if (!PlayerState.isPermitted(player)) {
             return;
@@ -77,8 +81,7 @@ public class BlockBreakListener implements Listener {
             if (!change.hasPermissionForCuttingItem(player, tool)) {
                 return;
             }
-            final Location location = event.getBlock().getLocation();
-            if (Locator.isPlayerPlaced(location)) {
+            if (isPlaced) {
                 return;
             }
             event.setCancelled(true);

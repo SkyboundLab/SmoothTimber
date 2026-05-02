@@ -13,10 +13,12 @@ import com.syntaxphoenix.spigot.smoothtimber.event.AsyncPlayerChopTreeEvent;
 import com.syntaxphoenix.spigot.smoothtimber.event.AsyncPlayerChoppedTreeEvent;
 import com.syntaxphoenix.spigot.smoothtimber.event.AsyncPlayerTreeFallEvent;
 import com.syntaxphoenix.spigot.smoothtimber.event.reason.DefaultReason;
+import com.syntaxphoenix.spigot.smoothtimber.listener.BlockPlaceListener;
 import com.syntaxphoenix.spigot.smoothtimber.platform.Platform;
 import com.syntaxphoenix.spigot.smoothtimber.toggle.ToggleStorage;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.PluginUtils;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.cooldown.CooldownHelper;
+import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker;
 import com.syntaxphoenix.spigot.smoothtimber.version.manager.VersionChanger;
 import com.syntaxphoenix.syntaxapi.command.CommandManager;
 import com.syntaxphoenix.syntaxapi.reflection.ClassCache;
@@ -38,6 +40,8 @@ public class SmoothTimber extends JavaPlugin {
             return;
         }
         STORAGE = new ToggleStorage();
+        PlacedBlockTracker.setup(this);
+        getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
 
         // Load classes
         CooldownHelper.class.getClass();

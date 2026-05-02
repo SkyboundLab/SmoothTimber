@@ -2,7 +2,7 @@ name: Build Development
 
 on:
   push:
-    branches: [main]
+    branches: [legacy]
 
 permissions:
   contents: write

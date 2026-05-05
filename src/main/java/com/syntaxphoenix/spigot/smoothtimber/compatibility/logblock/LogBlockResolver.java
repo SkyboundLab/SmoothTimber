@@ -94,7 +94,14 @@ public class LogBlockResolver extends LocationResolver {
 
     @Override
     public boolean isPlayerPlaced(final Location location) {
-        return databaseAccessor.isPlayerPlaced(Locator.getBlockState(location));
+        // Check LogBlock if enabled in config, otherwise fall back to PDC tracking
+        // PDC auto-removes on block break, so it's safe as a fallback
+        if (com.syntaxphoenix.spigot.smoothtimber.config.config.CutterConfig.USE_LOGBLOCK_TRACKING) {
+            if (databaseAccessor.isPlayerPlaced(Locator.getBlockState(location))) {
+                return true;
+            }
+        }
+        return com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker.isPlayerPlaced(location);
     }
 
 }

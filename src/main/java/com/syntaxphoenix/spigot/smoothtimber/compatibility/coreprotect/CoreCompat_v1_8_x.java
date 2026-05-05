@@ -38,7 +38,15 @@ public class CoreCompat_v1_8_x implements ICoreCompat {
         if (parseResult.getPlayer().isEmpty() || parseResult.getPlayer().startsWith("#") || parseResult.isRolledBack()) {
             return false;
         }
-        return parseResult.getActionId() != 0;
+        
+        // Check if it's a placement action (actionId != 0)
+        if (parseResult.getActionId() == 0) {
+            return false;
+        }
+        
+        // Verify the placed block type matches the current block type
+        // This prevents false positives when saplings grow into trees
+        return parseResult.getType().equals(state.getType());
     }
 
 }

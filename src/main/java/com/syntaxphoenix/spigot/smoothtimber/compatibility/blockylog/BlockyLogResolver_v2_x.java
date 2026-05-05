@@ -53,7 +53,14 @@ public final class BlockyLogResolver_v2_x extends LocationResolver {
 
     @Override
     public boolean isPlayerPlaced(final Location location) {
-        return api.isPlayerPlaced(location);
+        // Check BlockyLog if enabled in config, otherwise fall back to PDC tracking
+        // PDC auto-removes on block break, so it's safe as a fallback
+        if (com.syntaxphoenix.spigot.smoothtimber.config.config.CutterConfig.USE_BLOCKYLOG_TRACKING) {
+            if (api.isPlayerPlaced(location)) {
+                return true;
+            }
+        }
+        return com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker.isPlayerPlaced(location);
     }
 
 }

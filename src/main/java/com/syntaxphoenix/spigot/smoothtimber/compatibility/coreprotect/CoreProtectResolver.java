@@ -92,7 +92,14 @@ public class CoreProtectResolver extends LocationResolver {
         if (block == null) {
             return false;
         }
-        return compat.isPlayerPlaced(block);
+        // Check CoreProtect if enabled in config, otherwise fall back to PDC tracking
+        // PDC auto-removes on block break, so it's safe as a fallback
+        if (com.syntaxphoenix.spigot.smoothtimber.config.config.CutterConfig.USE_COREPROTECT_TRACKING) {
+            if (compat.isPlayerPlaced(block)) {
+                return true;
+            }
+        }
+        return com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker.isPlayerPlaced(location);
     }
 
 }

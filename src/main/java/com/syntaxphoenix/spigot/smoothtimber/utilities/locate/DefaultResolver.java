@@ -36,6 +36,10 @@ public final class DefaultResolver extends LocationResolver {
                     if (current.contains(location)) {
                         continue;
                     }
+                    // Skip player-placed blocks
+                    if (isPlayerPlaced(location)) {
+                        continue;
+                    }
                     current.add(location);
                     counter.increment();
                     resolved.add(location);
@@ -47,7 +51,11 @@ public final class DefaultResolver extends LocationResolver {
 
     @Override
     public boolean isPlayerPlaced(final Location location) {
-        return PlacedBlockTracker.isPlayerPlaced(location);
+        // Check CoreProtect first if available
+        return com.syntaxphoenix.spigot.smoothtimber.compatibility.CompatibilityHandler.getAddon(
+            com.syntaxphoenix.spigot.smoothtimber.compatibility.coreprotect.CoreProtectAddon.class)
+            .map(addon -> addon.getLocationResolver().isPlayerPlaced(location))
+            .orElseGet(() -> PlacedBlockTracker.isPlayerPlaced(location));
     }
 
 }

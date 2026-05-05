@@ -62,6 +62,10 @@ public final class CutterConfig extends STConfig {
     public static boolean ENABLE_ANIMATION = true;
     public static boolean INSTANT_COLLECT = false;
 
+    public static boolean USE_COREPROTECT_TRACKING = false;
+    public static boolean USE_LOGBLOCK_TRACKING = false;
+    public static boolean USE_BLOCKYLOG_TRACKING = false;
+
     /*
      * 
      */
@@ -109,6 +113,10 @@ public final class CutterConfig extends STConfig {
 
         ENABLE_ANIMATION = check("options.animation", ENABLE_ANIMATION);
         INSTANT_COLLECT = check("options.collect-instantly", INSTANT_COLLECT);
+
+        USE_COREPROTECT_TRACKING = check("options.tracking.coreprotect", USE_COREPROTECT_TRACKING);
+        USE_LOGBLOCK_TRACKING = check("options.tracking.logblock", USE_LOGBLOCK_TRACKING);
+        USE_BLOCKYLOG_TRACKING = check("options.tracking.blockylog", USE_BLOCKYLOG_TRACKING);
 
         ENABLE_WOOD_PERMISSIONS = check("options.permission.wood-type", ENABLE_WOOD_PERMISSIONS);
         ENABLE_CUTTER_PERMISSIONS = check("options.permission.cutter-type", ENABLE_CUTTER_PERMISSIONS);

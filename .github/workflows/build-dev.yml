@@ -21,10 +21,10 @@ jobs:
           distribution: temurin
 
       - name: Download GriefPrevention
-        run: curl -o GriefPrevention.jar https://api.serversmp.xyz/upload/69f601b7986e1f4bd6f7cf46.jar
+        run: curl -fsSL -o GriefPrevention.jar https://api.serversmp.xyz/upload/69f601b7986e1f4bd6f7cf46.jar
 
       - name: Download LogBlock
-        run: curl -o LogBlock.jar https://api.serversmp.xyz/upload/69f601b7a022054e454d11a4.jar
+        run: curl -fsSL -o LogBlock.jar https://api.serversmp.xyz/upload/69f601b7a022054e454d11a4.jar
 
       - name: Install GriefPrevention to Maven
         run: mvn install:install-file -Dfile=GriefPrevention.jar -DgroupId=com.github.TechFortress -DartifactId=GriefPrevention -Dversion=16.16.0 -Dpackaging=jar -DgeneratePom=true
@@ -33,15 +33,12 @@ jobs:
         run: mvn install:install-file -Dfile=LogBlock.jar -DgroupId=de.diddiz -DartifactId=logblock -Dversion=1.16.1.2-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
 
       - name: Build
-        run: mvn package --file pom.xml
-
-      - name: Extract repository name
-        run: echo "NAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
+        run: mvn -B package --file pom.xml
 
       - name: Upload Build
         uses: marvinpinto/action-automatic-releases@master
         with:
-          title: "${{ env.NAME }}"
+          title: "${{ github.event.repository.name }}"
           automatic_release_tag: "latest"
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           files: "target/*.jar"

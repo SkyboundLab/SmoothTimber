@@ -34,15 +34,12 @@ public class CoreCompat_v1_13_x implements ICoreCompat {
         if (parseResult.getPlayer().isEmpty() || parseResult.getPlayer().startsWith("#") || parseResult.isRolledBack()) {
             return false;
         }
-        
-        // Check if it's a placement action (actionId != 0)
         if (parseResult.getActionId() == 0) {
             return false;
         }
-        
-        // Verify the placed block type matches the current block type
-        // This prevents false positives when saplings grow into trees
-        return parseResult.getType().equals(state.getType());
+        // Only the block that was placed counts. This makes a tree grown from a
+        // player-placed sapling a new, natural block.
+        return state.getType().equals(parseResult.getType());
     }
 
 }

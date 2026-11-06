@@ -31,4 +31,8 @@ public abstract class CutterMigration extends Migration {
         context.move("options.cutter", "options");
     }
 
+    public static void update9(final MigrationContext context) {
+        context.getValues().keySet().removeIf(key -> key.startsWith("options.tracking."));
+    }
+
 }

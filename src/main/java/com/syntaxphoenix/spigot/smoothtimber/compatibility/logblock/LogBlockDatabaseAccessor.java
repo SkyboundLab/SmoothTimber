@@ -52,10 +52,9 @@ public class LogBlockDatabaseAccessor {
                     return false;
                 }
                 final Material type = MaterialConverter.getMaterial(resultSet.getInt("type"));
-                if (type.name().endsWith("SAPLING")) {
-                    return false;
-                }
-                return !EMPTY_MATERIALS.contains(type);
+                // The latest log entry has to describe the block that is currently there.
+                // Otherwise a placed sapling that grew into a tree would still count as placed.
+                return type == block.getType() && !EMPTY_MATERIALS.contains(type);
             }
         } catch (final SQLException throwables) {
             SmoothTimber.get().getLogger().severe("Failed to connect to LogBlock database");

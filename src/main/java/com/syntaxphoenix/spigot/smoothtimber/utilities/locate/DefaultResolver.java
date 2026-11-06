@@ -51,11 +51,7 @@ public final class DefaultResolver extends LocationResolver {
 
     @Override
     public boolean isPlayerPlaced(final Location location) {
-        // Check CoreProtect first if available
-        return com.syntaxphoenix.spigot.smoothtimber.compatibility.CompatibilityHandler.getAddon(
-            com.syntaxphoenix.spigot.smoothtimber.compatibility.coreprotect.CoreProtectAddon.class)
-            .map(addon -> addon.getLocationResolver().isPlayerPlaced(location))
-            .orElseGet(() -> PlacedBlockTracker.isPlayerPlaced(location));
+        return PlacedBlockTracker.isPlayerPlaced(location);
     }
 
 }

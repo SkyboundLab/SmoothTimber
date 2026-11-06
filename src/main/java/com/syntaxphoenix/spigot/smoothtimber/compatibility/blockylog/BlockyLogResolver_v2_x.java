@@ -7,11 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import com.syntaxphoenix.blockylog.BlockyApi;
-import com.syntaxphoenix.blockylog.data.BlockyStorage;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.PluginUtils;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.limit.IntCounter;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.LocationResolver;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.Locator;
+import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker;
 import com.syntaxphoenix.spigot.smoothtimber.version.manager.VersionChanger;
 
 public final class BlockyLogResolver_v2_x extends LocationResolver {
@@ -29,8 +29,6 @@ public final class BlockyLogResolver_v2_x extends LocationResolver {
         final int y = start.getBlockY();
         final int z = start.getBlockZ();
 
-        final BlockyStorage storage = api.getStorage(world);
-
         final ArrayList<Location> resolved = new ArrayList<>();
         for (int cx = x - radius; cx <= x + radius; cx++) {
             for (int cz = z - radius; cz <= z + radius; cz++) {
@@ -39,7 +37,7 @@ public final class BlockyLogResolver_v2_x extends LocationResolver {
                 }
                 final Location location = new Location(world, cx, y, cz);
                 if (change.isWoodBlock(Locator.getBlockState(location))) {
-                    if (current.contains(location) || storage.getData(cx, y, cz).getPlayerId() != null) {
+                    if (current.contains(location) || isPlayerPlaced(location)) {
                         continue;
                     }
                     current.add(location);
@@ -53,14 +51,7 @@ public final class BlockyLogResolver_v2_x extends LocationResolver {
 
     @Override
     public boolean isPlayerPlaced(final Location location) {
-        // Check BlockyLog if enabled in config, otherwise fall back to PDC tracking
-        // PDC auto-removes on block break, so it's safe as a fallback
-        if (com.syntaxphoenix.spigot.smoothtimber.config.config.CutterConfig.USE_BLOCKYLOG_TRACKING) {
-            if (api.isPlayerPlaced(location)) {
-                return true;
-            }
-        }
-        return com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker.isPlayerPlaced(location);
+        return PlacedBlockTracker.isPlayerPlaced(location) || api.isPlayerPlaced(location);
     }
 
 }

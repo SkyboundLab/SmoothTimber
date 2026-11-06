@@ -18,6 +18,7 @@ import com.syntaxphoenix.spigot.smoothtimber.utilities.PluginUtils;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.limit.IntCounter;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.LocationResolver;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.Locator;
+import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker;
 import com.syntaxphoenix.spigot.smoothtimber.version.manager.VersionChanger;
 
 import de.diddiz.LogBlock.LogBlock;
@@ -56,7 +57,7 @@ public class LogBlockResolver extends LocationResolver {
                         continue;
                     }
                     tasks.add(executorService.submit(() -> {
-                        if (isPlayerPlaced(block)) {
+                        if (isPlayerPlaced(location, block)) {
                             return;
                         }
                         output.add(location);
@@ -85,23 +86,14 @@ public class LogBlockResolver extends LocationResolver {
 
     }
 
-    public boolean isPlayerPlaced(final BlockState block) {
-        if (block == null) {
-            return false;
-        }
-        return databaseAccessor.isPlayerPlaced(block);
-    }
-
     @Override
     public boolean isPlayerPlaced(final Location location) {
-        // Check LogBlock if enabled in config, otherwise fall back to PDC tracking
-        // PDC auto-removes on block break, so it's safe as a fallback
-        if (com.syntaxphoenix.spigot.smoothtimber.config.config.CutterConfig.USE_LOGBLOCK_TRACKING) {
-            if (databaseAccessor.isPlayerPlaced(Locator.getBlockState(location))) {
-                return true;
-            }
-        }
-        return com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker.isPlayerPlaced(location);
+        final BlockState block = Locator.getBlockState(location);
+        return block != null && isPlayerPlaced(location, block);
+    }
+
+    private boolean isPlayerPlaced(final Location location, final BlockState block) {
+        return PlacedBlockTracker.isPlayerPlaced(location) || databaseAccessor.isPlayerPlaced(block);
     }
 
 }

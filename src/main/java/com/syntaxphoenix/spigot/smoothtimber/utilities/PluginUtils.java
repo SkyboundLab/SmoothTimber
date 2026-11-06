@@ -20,9 +20,11 @@ import com.syntaxphoenix.spigot.smoothtimber.config.config.CutterConfig;
 import com.syntaxphoenix.spigot.smoothtimber.config.config.MessageConfig;
 import com.syntaxphoenix.spigot.smoothtimber.listener.BlockBreakListener;
 import com.syntaxphoenix.spigot.smoothtimber.listener.BlockFallListener;
+import com.syntaxphoenix.spigot.smoothtimber.listener.BlockTrackingListener;
 import com.syntaxphoenix.spigot.smoothtimber.listener.PluginLoadListener;
 import com.syntaxphoenix.spigot.smoothtimber.platform.Platform;
 import com.syntaxphoenix.spigot.smoothtimber.stats.SyntaxPhoenixStats;
+import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.plugin.PluginSettings;
 import com.syntaxphoenix.spigot.smoothtimber.version.manager.VersionChanger;
 import com.syntaxphoenix.spigot.smoothtimber.version.manager.VersionExchanger;
@@ -49,6 +51,7 @@ public class PluginUtils {
         if (!CHANGER.isValid()) {
             return;
         }
+        PlacedBlockTracker.setup(MAIN);
         CompatibilityHandler.registerDefaults();
         CutterConfig.INSTANCE.reload();
         registerCommands();
@@ -78,6 +81,7 @@ public class PluginUtils {
         final PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new BlockBreakListener(), MAIN);
         pluginManager.registerEvents(new BlockFallListener(), MAIN);
+        pluginManager.registerEvents(new BlockTrackingListener(), MAIN);
         pluginManager.registerEvents(new PluginLoadListener(), MAIN);
     }
 

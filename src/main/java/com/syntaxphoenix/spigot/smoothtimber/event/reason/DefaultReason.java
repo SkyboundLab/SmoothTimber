@@ -10,7 +10,6 @@ public enum DefaultReason implements IChopReason {
     RESIDENCE,
     LANDS,
     FACTIONS,
-    UXMCLAIMS,
     UNKNOWN;
 
     @Override

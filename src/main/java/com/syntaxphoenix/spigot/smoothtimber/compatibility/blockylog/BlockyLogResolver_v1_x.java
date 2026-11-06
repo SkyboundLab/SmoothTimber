@@ -12,6 +12,7 @@ import com.syntaxphoenix.spigot.smoothtimber.utilities.PluginUtils;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.limit.IntCounter;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.LocationResolver;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.Locator;
+import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker;
 import com.syntaxphoenix.spigot.smoothtimber.version.manager.VersionChanger;
 
 public final class BlockyLogResolver_v1_x extends LocationResolver {
@@ -37,7 +38,7 @@ public final class BlockyLogResolver_v1_x extends LocationResolver {
                 }
                 final Location location = new Location(world, cx, y, cz);
                 if (change.isWoodBlock(Locator.getBlockState(location))) {
-                    if (current.contains(location)) {
+                    if (current.contains(location) || PlacedBlockTracker.isPlayerPlaced(location)) {
                         continue;
                     }
                     final Chunk chunk = location.getChunk();
@@ -56,6 +57,9 @@ public final class BlockyLogResolver_v1_x extends LocationResolver {
 
     @Override
     public boolean isPlayerPlaced(final Location location) {
+        if (PlacedBlockTracker.isPlayerPlaced(location)) {
+            return true;
+        }
         final BlockyWorld world = BlockyWorld.get(location.getWorld());
         final Chunk chunk = location.getChunk();
         return !world.containsChunk(chunk.getX(), chunk.getZ())

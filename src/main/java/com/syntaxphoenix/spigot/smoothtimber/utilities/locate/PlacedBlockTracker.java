@@ -1,101 +1,117 @@
 package com.syntaxphoenix.spigot.smoothtimber.utilities.locate;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Tracks player-placed blocks using Minecraft's PersistentDataContainer (PDC).
- * This approach stores metadata directly on blocks, which automatically handles:
- * - Block removal (any method: player break, explosion, fire, WorldEdit, etc.)
- * - Server restarts (data persists in chunk files)
- * - No memory overhead or file I/O
- * - No cleanup needed
+ * Tracks player-placed blocks in the persistent data container of their chunk.
+ * <p>
+ * Every marker also stores the material that was placed. If the block at that
+ * location no longer has the same material (it was broken, replaced by the
+ * environment or a sapling grew into a tree), the marker is stale and is
+ * removed automatically.
  */
-public class PlacedBlockTracker {
+public final class PlacedBlockTracker {
 
-    private static NamespacedKey PLAYER_PLACED_KEY;
+    private static final String KEY_PREFIX = "player_placed_";
 
-    public static void setup(Plugin plugin) {
-        PLAYER_PLACED_KEY = new NamespacedKey(plugin, "player_placed");
+    private static NamespacedKey key;
+
+    private PlacedBlockTracker() {}
+
+    public static void setup(final Plugin plugin) {
+        key = new NamespacedKey(plugin, "player_placed");
     }
 
     /**
      * Marks a block as player-placed.
-     * @param block The block to mark
+     *
+     * @param block the block that was placed
      */
-    public static void markAsPlaced(Block block) {
-        if (PLAYER_PLACED_KEY == null) {
+    public static void markAsPlaced(final Block block) {
+        if (block != null) {
+            markAsPlaced(block, block.getType());
+        }
+    }
+
+    /**
+     * Marks a block as player-placed with an explicit material.
+     * <p>
+     * This is used when a piston moves a block: the destination does not contain
+     * the moved material yet when the event is fired.
+     *
+     * @param block    the block to mark
+     * @param material the material that will be at the block's location
+     */
+    public static void markAsPlaced(final Block block, final Material material) {
+        if (key == null || block == null || material == null) {
             return;
         }
-        block.getChunk().getPersistentDataContainer().set(
-            getChunkKey(block.getLocation()), 
-            PersistentDataType.BYTE, 
-            (byte) 1
-        );
-    }
-    
-    /**
-     * Gets a unique key for a block location within a chunk.
-     */
-    private static NamespacedKey getChunkKey(Location location) {
-        String key = "player_placed_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ();
-        return new NamespacedKey(PLAYER_PLACED_KEY.getNamespace(), key);
+        container(block).set(blockKey(block), PersistentDataType.STRING, material.name());
     }
 
     /**
-     * Marks a block at the given location as player-placed.
-     * @param location The location of the block to mark
+     * Checks if a block was placed by a player and still is the same block.
+     *
+     * @param block the block to check
+     *
+     * @return true if the block is still the player-placed block
      */
-    public static void markAsPlaced(Location location) {
-        markAsPlaced(location.getBlock());
-    }
-
-    /**
-     * Checks if a block was placed by a player.
-     * @param block The block to check
-     * @return true if the block was placed by a player, false otherwise
-     */
-    public static boolean isPlayerPlaced(Block block) {
-        if (PLAYER_PLACED_KEY == null) {
+    public static boolean isPlayerPlaced(final Block block) {
+        if (key == null || block == null) {
             return false;
         }
-        return block.getChunk().getPersistentDataContainer().has(
-            getChunkKey(block.getLocation()), 
-            PersistentDataType.BYTE
-        );
+        final PersistentDataContainer container = container(block);
+        final NamespacedKey blockKey = blockKey(block);
+        final String material = container.get(blockKey, PersistentDataType.STRING);
+        if (material == null) {
+            // Remove markers written by the old tracker, which did not store a material.
+            if (container.has(blockKey, PersistentDataType.BYTE)) {
+                container.remove(blockKey);
+            }
+            return false;
+        }
+        if (!material.equals(block.getType().name())) {
+            // The block was removed or replaced, so the marker is no longer valid.
+            container.remove(blockKey);
+            return false;
+        }
+        return true;
     }
 
-    /**
-     * Checks if a block at the given location was placed by a player.
-     * @param location The location of the block to check
-     * @return true if the block was placed by a player, false otherwise
-     */
-    public static boolean isPlayerPlaced(Location location) {
-        return isPlayerPlaced(location.getBlock());
+    public static boolean isPlayerPlaced(final Location location) {
+        return location != null && isPlayerPlaced(location.getBlock());
     }
 
     /**
      * Removes the player-placed marker from a block.
-     * Note: This is usually not needed as the PDC is automatically removed when blocks are destroyed.
-     * @param block The block to unmark
+     *
+     * @param block the block to unmark
      */
-    public static void unmark(Block block) {
-        if (PLAYER_PLACED_KEY == null) {
+    public static void unmark(final Block block) {
+        if (key == null || block == null) {
             return;
         }
-        block.getChunk().getPersistentDataContainer().remove(getChunkKey(block.getLocation()));
+        container(block).remove(blockKey(block));
     }
 
-    /**
-     * Removes the player-placed marker from a block at the given location.
-     * Note: This is usually not needed as the PDC is automatically removed when blocks are destroyed.
-     * @param location The location of the block to unmark
-     */
-    public static void unmark(Location location) {
-        unmark(location.getBlock());
+    public static void unmark(final Location location) {
+        if (location != null) {
+            unmark(location.getBlock());
+        }
     }
+
+    private static PersistentDataContainer container(final Block block) {
+        return block.getChunk().getPersistentDataContainer();
+    }
+
+    private static NamespacedKey blockKey(final Block block) {
+        return new NamespacedKey(key.getNamespace(), KEY_PREFIX + block.getX() + '_' + block.getY() + '_' + block.getZ());
+    }
+
 }

@@ -18,6 +18,7 @@ import com.syntaxphoenix.spigot.smoothtimber.utilities.PluginUtils;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.limit.IntCounter;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.LocationResolver;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.Locator;
+import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker;
 import com.syntaxphoenix.spigot.smoothtimber.version.manager.VersionChanger;
 
 public class CoreProtectResolver extends LocationResolver {
@@ -54,7 +55,7 @@ public class CoreProtectResolver extends LocationResolver {
                         continue;
                     }
                     tasks.add(service.submit(() -> {
-                        if (compat.isPlayerPlaced(block)) {
+                        if (isPlayerPlaced(location, block)) {
                             return;
                         }
                         output.add(location);
@@ -89,17 +90,11 @@ public class CoreProtectResolver extends LocationResolver {
     @Override
     public boolean isPlayerPlaced(final Location location) {
         final BlockState block = Locator.getBlockState(location);
-        if (block == null) {
-            return false;
-        }
-        // Check CoreProtect if enabled in config, otherwise fall back to PDC tracking
-        // PDC auto-removes on block break, so it's safe as a fallback
-        if (com.syntaxphoenix.spigot.smoothtimber.config.config.CutterConfig.USE_COREPROTECT_TRACKING) {
-            if (compat.isPlayerPlaced(block)) {
-                return true;
-            }
-        }
-        return com.syntaxphoenix.spigot.smoothtimber.utilities.locate.PlacedBlockTracker.isPlayerPlaced(location);
+        return block != null && isPlayerPlaced(location, block);
+    }
+
+    private boolean isPlayerPlaced(final Location location, final BlockState block) {
+        return PlacedBlockTracker.isPlayerPlaced(location) || compat.isPlayerPlaced(block);
     }
 
 }

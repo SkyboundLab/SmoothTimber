@@ -14,6 +14,7 @@ import com.syntaxphoenix.spigot.smoothtimber.config.ActionType;
 import com.syntaxphoenix.spigot.smoothtimber.config.Message;
 import com.syntaxphoenix.spigot.smoothtimber.config.STConfig;
 import com.syntaxphoenix.spigot.smoothtimber.config.migration.CutterMigration;
+import com.syntaxphoenix.spigot.smoothtimber.enchant.TimberEnchantment;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.PluginUtils;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.cooldown.CooldownHelper;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.limit.Limiter;
@@ -45,6 +46,9 @@ public final class CutterConfig extends STConfig {
 
     public static boolean ENABLE_LUCK = false;
     public static double LUCK_MULTIPLIER = 1.0;
+
+    public static boolean TIMBER_ENCHANTMENT_ENABLED = true;
+    public static double TIMBER_ENCHANTMENT_TABLE_CHANCE = 0.5;
 
     public static boolean ENABLE_EXCLUSION = false;
     public static List<Material> EXCLUDED_MATERIALS = new ArrayList<>();
@@ -123,6 +127,19 @@ public final class CutterConfig extends STConfig {
 
         ENABLE_LUCK = check("enchantments.fortune.enabled", ENABLE_LUCK);
         LUCK_MULTIPLIER = check("enchantments.fortune.multiplier", LUCK_MULTIPLIER);
+
+        TIMBER_ENCHANTMENT_ENABLED = check("enchantments.timber.enabled", TIMBER_ENCHANTMENT_ENABLED);
+        TIMBER_ENCHANTMENT_TABLE_CHANCE = check("enchantments.timber.table-chance", TIMBER_ENCHANTMENT_TABLE_CHANCE);
+        if (TIMBER_ENCHANTMENT_TABLE_CHANCE < 0.0) {
+            set("enchantments.timber.table-chance", TIMBER_ENCHANTMENT_TABLE_CHANCE = 0.0);
+        }
+        if (TIMBER_ENCHANTMENT_TABLE_CHANCE > 1.0) {
+            set("enchantments.timber.table-chance", TIMBER_ENCHANTMENT_TABLE_CHANCE = 1.0);
+        }
+        if (TIMBER_ENCHANTMENT_ENABLED && !TimberEnchantment.isRegistered()) {
+            getLogger().warning(
+                "Timber enchantment gating is enabled, but the Timber enchantment is not registered on this server (it needs Paper 1.21+). Timber will work without the enchantment until then.");
+        }
 
         ENABLE_EXCLUSION = check("exclusion.enabled", ENABLE_EXCLUSION);
         EXCLUDED_MATERIALS = check("exclusion.list", EXCLUDED_MATERIALS);

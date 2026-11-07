@@ -1,0 +1,101 @@
+main: ${project.groupId}.${java.package.id}.${project.name}
+name: ${project.name}
+author: SyntaxPhoenix IT-Solutions
+version: ${projectVersion}
+api-version: 1.21
+# Paper-only manifest: Paper (1.19.4+) loads this file instead of plugin.yml.
+# It exists so the Timber enchantment can be registered through Paper's
+# registry API in the bootstrapper below. Spigot ignores this file and keeps
+# using plugin.yml, where the enchantment is simply unavailable and timber
+# stays ungated.
+# NOTE: api-version must be 1.19+ here — Paper's paper-plugin loader rejects
+# older values (the legacy plugin.yml keeps 1.13 for Spigot).
+# NOTE: the field is "bootstrapper", not "bootstrap" — Paper silently ignores
+# a "bootstrap" key, so the enchantment would never register.
+bootstrapper: com.syntaxphoenix.spigot.smoothtimber.enchant.TimberEnchantBootstrap
+softdepend: [BlockyLog, WorldGuard, Residence, Lands, Jobs, GriefPrevention, PlaceholderAPI, CoreProtect, LogBlock, mcMMO, Towny]
+# NOTE: softdepend only controls load ORDER. Paper plugins run in isolated
+# classloaders and cannot see other plugins' classes unless those plugins
+# are declared here with join-classpath: true — without this, starting a
+# compatibility addon for a present plugin throws NoClassDefFoundError
+# (e.g. PlaceholderAPI's PlaceholderExpansion) and kills onEnable. Every
+# plugin the compatibility layer can hook into is listed, all optional
+# (required: false) and loaded before us (load: AFTER = they load first).
+# Factions is included even though the legacy softdepend list omits it:
+# CompatibilityHandler registers a Factions addon too.
+dependencies:
+  server:
+    BlockyLog:
+      load: AFTER
+      required: false
+      join-classpath: true
+    CoreProtect:
+      load: AFTER
+      required: false
+      join-classpath: true
+    Factions:
+      load: AFTER
+      required: false
+      join-classpath: true
+    GriefPrevention:
+      load: AFTER
+      required: false
+      join-classpath: true
+    Jobs:
+      load: AFTER
+      required: false
+      join-classpath: true
+    Lands:
+      load: AFTER
+      required: false
+      join-classpath: true
+    LogBlock:
+      load: AFTER
+      required: false
+      join-classpath: true
+    mcMMO:
+      load: AFTER
+      required: false
+      join-classpath: true
+    PlaceholderAPI:
+      load: AFTER
+      required: false
+      join-classpath: true
+    Residence:
+      load: AFTER
+      required: false
+      join-classpath: true
+    Towny:
+      load: AFTER
+      required: false
+      join-classpath: true
+    WorldGuard:
+      load: AFTER
+      required: false
+      join-classpath: true
+folia-supported: true
+# No commands section here on purpose: Paper plugins do not use YAML command
+# declarations. The command is registered through Paper's Brigadier API
+# (see PaperCommandAdapter) when running under the Paper loader, and through
+# plugin.yml + getCommand when running as a legacy Bukkit plugin.
+
+permissions:
+    smoothtimber.*:
+        description: Gives access to all SmoothTimber permissions
+        children:
+            smoothtimber.limit.*: true
+            smoothtimber.use: true
+            smoothtimber.toggle: true
+            smoothtimber.enchant: true
+    smoothtimber.limit.*:
+        description: Allows you to break unlimited blocks if the limiter is enabled
+        default: op
+    smoothtimber.use:
+        description: Allows you to use SmoothTimber
+        default: true
+    smoothtimber.toggle:
+        description: Allows you to toggle the TreeCutter of SmoothTimber
+        default: true
+    smoothtimber.enchant:
+        description: Allows you to apply the Timber enchantment with /smoothtimber enchant
+        default: op

@@ -48,6 +48,13 @@ public enum Message {
     TOGGLE_OFF_TIMED("&7You disabled your &c%tool% &7for &4%time%&7!"),
     TOGGLE_DISABLED("&7Toggling is disabled!"),
 
+    // Enchantment
+    ENCHANT_NOT222AVAILABLE("&7The &5Timber &7enchantment isn't available on this server (it needs Paper 1.21+)!"),
+    ENCHANT_NO222AXE("&7You need to hold an &5axe &7to use the &5Timber &7enchantment!"),
+    ENCHANT_ALREADY("&7This axe already has the &5Timber &7enchantment!"),
+    ENCHANT_FAILED("&7Couldn't apply the &5Timber &7enchantment to this item!"),
+    ENCHANT_APPLIED("&7Applied the &5Timber &7enchantment to your axe!"),
+
     // Cooldown
     COOLDOWN_WAIT("&7Your tool is still on &dcooldown&7 for &5%time%&7!"),
 
@@ -59,6 +66,7 @@ public enum Message {
 
     // Command Description
     COMMAND_USAGE_TOGGLE("&7/sm toggle (<time>) &8- &7Enable the tree chopper permanently or a specific time in seconds."),
+    COMMAND_USAGE_ENCHANT("&7/sm enchant &8- &7Apply the Timber enchantment to the axe in your hand."),
     COMMAND_USAGE_HELP("&7/sm help &8- &7List all smoothtimber commands with their description and usage"),
 
     // Abort Reasons

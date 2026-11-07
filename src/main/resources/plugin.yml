@@ -19,6 +19,7 @@ permissions:
             smoothtimber.limit.*: true
             smoothtimber.use: true
             smoothtimber.toggle: true
+            smoothtimber.enchant: true
     smoothtimber.limit.*:
         description: Allows you to break unlimited blocks if the limiter is enabled
         default: op
@@ -28,3 +29,6 @@ permissions:
     smoothtimber.toggle:
         description: Allows you to toggle the TreeCutter of SmoothTimber
         default: true
+    smoothtimber.enchant:
+        description: Allows you to apply the Timber enchantment with /smoothtimber enchant
+        default: op

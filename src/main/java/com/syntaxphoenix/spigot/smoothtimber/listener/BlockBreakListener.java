@@ -18,6 +18,7 @@ import org.bukkit.plugin.Plugin;
 import com.syntaxphoenix.spigot.smoothtimber.SmoothTimber;
 import com.syntaxphoenix.spigot.smoothtimber.config.Message;
 import com.syntaxphoenix.spigot.smoothtimber.config.config.CutterConfig;
+import com.syntaxphoenix.spigot.smoothtimber.enchant.TimberEnchantment;
 import com.syntaxphoenix.spigot.smoothtimber.event.AsyncPlayerTreeFallEvent;
 import com.syntaxphoenix.spigot.smoothtimber.platform.Platform;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.PlayerState;
@@ -74,6 +75,14 @@ public class BlockBreakListener implements Listener {
 
         if (change.hasCuttingItemInHand(player)) {
             final ItemStack tool = change.getItemInHand(player);
+            // Timber only triggers on axes carrying the Timber enchantment
+            // (Paper 1.21+, where the enchantment is registered). On servers
+            // without the enchantment the check is skipped and timber behaves
+            // as before; see CutterConfig for the toggle.
+            if (CutterConfig.TIMBER_ENCHANTMENT_ENABLED && TimberEnchantment.isRegistered()
+                && !TimberEnchantment.hasTimber(tool)) {
+                return;
+            }
             if (!change.hasPermissionForCuttingItem(player, tool)) {
                 return;
             }

@@ -22,6 +22,10 @@ import com.syntaxphoenix.spigot.smoothtimber.utilities.PluginUtils;
 /*
  * Auto Sapling: a dropped sapling that comes to rest on soil plants itself.
  *
+ * This is the "dropped" mode (options.auto-sapling.mode: dropped). In
+ * "replant" mode this listener does nothing and TreeReplanter replants
+ * the stump from the player's inventory instead.
+ *
  * There is no Bukkit event for an item landing, so a sapling item is tracked
  * from the moment it spawns and re-checked on the region thread that owns
  * it until it plants, is picked up, merges away or despawns.
@@ -57,7 +61,7 @@ public class AutoSaplingListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onItemSpawn(final ItemSpawnEvent event) {
-        if (!CutterConfig.AUTO_SAPLING_ENABLED) {
+        if (!CutterConfig.AUTO_SAPLING_ENABLED || CutterConfig.AUTO_SAPLING_REPLANT) {
             return;
         }
         final Item item = event.getEntity();
@@ -83,7 +87,7 @@ public class AutoSaplingListener implements Listener {
             if (!item.isValid()) {
                 return;
             }
-            if (!CutterConfig.AUTO_SAPLING_ENABLED) {
+            if (!CutterConfig.AUTO_SAPLING_ENABLED || CutterConfig.AUTO_SAPLING_REPLANT) {
                 return;
             }
             final ItemStack stack = item.getItemStack();

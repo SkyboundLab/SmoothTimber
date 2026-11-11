@@ -49,6 +49,8 @@ public final class CutterConfig extends STConfig {
     public static boolean PREVENT_TOOL_BREAK = true;
 
     public static boolean AUTO_SAPLING_ENABLED = true;
+    public static String AUTO_SAPLING_MODE = "dropped";
+    public static boolean AUTO_SAPLING_REPLANT = false;
     public static int AUTO_SAPLING_DELAY = 100;
     public static int AUTO_SAPLING_CHECK_INTERVAL = 20;
     public static List<Material> AUTO_SAPLING_MATERIALS = new ArrayList<>();
@@ -137,6 +139,14 @@ public final class CutterConfig extends STConfig {
         PREVENT_TOOL_BREAK = check("options.prevent-tool-break", PREVENT_TOOL_BREAK);
 
         AUTO_SAPLING_ENABLED = check("options.auto-sapling.enabled", AUTO_SAPLING_ENABLED);
+        AUTO_SAPLING_MODE = check("options.auto-sapling.mode", AUTO_SAPLING_MODE);
+        AUTO_SAPLING_MODE = AUTO_SAPLING_MODE == null ? "dropped" : AUTO_SAPLING_MODE.trim().toLowerCase();
+        if (!AUTO_SAPLING_MODE.equals("dropped") && !AUTO_SAPLING_MODE.equals("replant")) {
+            getLogger().warning("Unknown auto-sapling mode '" + AUTO_SAPLING_MODE
+                + "' (expected 'dropped' or 'replant'); using 'dropped'.");
+            set("options.auto-sapling.mode", AUTO_SAPLING_MODE = "dropped");
+        }
+        AUTO_SAPLING_REPLANT = AUTO_SAPLING_MODE.equals("replant");
         AUTO_SAPLING_DELAY = check("options.auto-sapling.delay", AUTO_SAPLING_DELAY);
         AUTO_SAPLING_CHECK_INTERVAL = check("options.auto-sapling.check-interval", AUTO_SAPLING_CHECK_INTERVAL);
         if (!config.contains("options.auto-sapling.materials")) {

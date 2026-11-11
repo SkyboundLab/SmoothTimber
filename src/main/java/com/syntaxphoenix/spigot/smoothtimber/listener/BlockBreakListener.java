@@ -1,9 +1,12 @@
 package com.syntaxphoenix.spigot.smoothtimber.listener;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -23,6 +26,7 @@ import com.syntaxphoenix.spigot.smoothtimber.event.AsyncPlayerTreeFallEvent;
 import com.syntaxphoenix.spigot.smoothtimber.platform.Platform;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.PlayerState;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.PluginUtils;
+import com.syntaxphoenix.spigot.smoothtimber.utilities.TreeReplanter;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.cooldown.CooldownHelper;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.limit.Limiter;
 import com.syntaxphoenix.spigot.smoothtimber.utilities.locate.Locator;
@@ -109,6 +113,7 @@ public class BlockBreakListener implements Listener {
                         final boolean animated = CutterConfig.ENABLE_ANIMATION;
                         final boolean collect = CutterConfig.INSTANT_COLLECT;
                         final Plugin plugin = SmoothTimber.get();
+                        final Map<Location, Material> felledLogs = new LinkedHashMap<>();
                         for (final Location woodBlock : woodBlocks) {
                             final Block block = woodBlock.getBlock();
                             final WoodType wood = change.getWoodTypeFromBlock(block);
@@ -120,6 +125,7 @@ public class BlockBreakListener implements Listener {
                                     break;
                                 }
                                 event.add(wood);
+                                felledLogs.put(woodBlock, block.getType());
                                 final int amount = maxItems <= 1 ? maxItems : generateAmount(maxItems);
                                 if (animated) {
                                     final Entity entity = change.toFallingBlock(block);
@@ -137,6 +143,9 @@ public class BlockBreakListener implements Listener {
                                 }
                                 change.dropItemByBlock(block, amount);
                             }
+                        }
+                        if (CutterConfig.AUTO_SAPLING_ENABLED && CutterConfig.AUTO_SAPLING_REPLANT && !felledLogs.isEmpty()) {
+                            TreeReplanter.replant(player, felledLogs);
                         }
                         Platform.getPlatform().asyncTask(() -> SmoothTimber.triggerFallEvent(event));
                     }

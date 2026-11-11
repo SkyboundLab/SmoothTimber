@@ -44,6 +44,8 @@ public final class CutterConfig extends STConfig {
 
     public static boolean ENABLE_UNBREAKING = true;
 
+    public static boolean PREVENT_TOOL_BREAK = true;
+
     public static boolean ENABLE_LUCK = false;
     public static double LUCK_MULTIPLIER = 1.0;
 
@@ -124,6 +126,8 @@ public final class CutterConfig extends STConfig {
         DEFAULT_COOLDOWN_TIME = check("cooldown.time", DEFAULT_COOLDOWN_TIME);
 
         ENABLE_UNBREAKING = check("enchantments.unbreaking.enabled", ENABLE_UNBREAKING);
+
+        PREVENT_TOOL_BREAK = check("options.prevent-tool-break", PREVENT_TOOL_BREAK);
 
         ENABLE_LUCK = check("enchantments.fortune.enabled", ENABLE_LUCK);
         LUCK_MULTIPLIER = check("enchantments.fortune.multiplier", LUCK_MULTIPLIER);

@@ -114,6 +114,9 @@ public class BlockBreakListener implements Listener {
                             final WoodType wood = change.getWoodTypeFromBlock(block);
                             if (wood != null && block != null && change.hasPermissionForWoodType(player, wood)) {
                                 if (player.getGameMode() != GameMode.CREATIVE && change.removeDurabilityFromItem(tool) == null) {
+                                    if (CutterConfig.PREVENT_TOOL_BREAK && tool.getAmount() > 0) {
+                                        player.sendMessage(Message.GLOBAL_PREFIX.colored() + ' ' + Message.TOOL_ALMOST_BROKEN.colored());
+                                    }
                                     break;
                                 }
                                 event.add(wood);

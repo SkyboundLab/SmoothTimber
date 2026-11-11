@@ -63,6 +63,9 @@ public final class v1_19xChanger implements VersionChanger {
         if (meta instanceof Damageable) {
             final Damageable dmg = (Damageable) meta;
             int damage = dmg.getDamage() + 1;
+            if (CutterConfig.PREVENT_TOOL_BREAK && stack.getType().getMaxDurability() - damage < 1) {
+                return null;
+            }
             if (stack.getType().getMaxDurability() - damage < 0) {
                 stack.setAmount(0);
                 return null;

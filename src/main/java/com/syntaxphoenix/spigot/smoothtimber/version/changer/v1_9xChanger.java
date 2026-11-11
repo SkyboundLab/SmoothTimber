@@ -72,6 +72,9 @@ public final class v1_9xChanger implements VersionChanger {
             }
         }
         final Integer durability = stack.getDurability() + 1;
+        if (CutterConfig.PREVENT_TOOL_BREAK && stack.getType().getMaxDurability() - durability < 1) {
+            return null;
+        }
         if (stack.getType().getMaxDurability() < durability) {
             stack.setAmount(0);
             return null;

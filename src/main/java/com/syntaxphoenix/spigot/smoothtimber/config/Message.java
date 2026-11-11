@@ -40,6 +40,7 @@ public enum Message {
 
     // Tools
     TOOLS_WOODCHOPPER("woodchopper"),
+    TOOL_ALMOST_BROKEN("&7Your axe is almost broken!"),
 
     // Toggle
     TOGGLE_ON_FOREVER("&7You enabled your &d%tool%&7!"),
@@ -80,14 +81,14 @@ public enum Message {
     ABORT_REASON_FACTIONS("it is protected by a faction claim"),
 
     /*
-     * 
+     *
      */
     ;
 
     private final String message;
 
     /*
-     * 
+     *
      */
 
     Message() {
@@ -99,7 +100,7 @@ public enum Message {
     }
 
     /*
-     * 
+     *
      */
 
     public final String id() {
@@ -107,7 +108,7 @@ public enum Message {
     }
 
     /*
-     * 
+     *
      */
 
     public final String message() {
@@ -128,7 +129,7 @@ public enum Message {
     }
 
     /*
-     * 
+     *
      */
 
     public final String colored() {
@@ -144,7 +145,7 @@ public enum Message {
     }
 
     /*
-     * 
+     *
      */
 
     public static final Message fromId(final String id) {

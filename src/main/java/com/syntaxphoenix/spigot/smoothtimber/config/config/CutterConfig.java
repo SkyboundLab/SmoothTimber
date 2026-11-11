@@ -4,10 +4,12 @@ import static org.bukkit.Bukkit.getLogger;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 
 import com.syntaxphoenix.spigot.smoothtimber.config.ActionType;
@@ -45,6 +47,11 @@ public final class CutterConfig extends STConfig {
     public static boolean ENABLE_UNBREAKING = true;
 
     public static boolean PREVENT_TOOL_BREAK = true;
+
+    public static boolean AUTO_SAPLING_ENABLED = true;
+    public static int AUTO_SAPLING_DELAY = 100;
+    public static int AUTO_SAPLING_CHECK_INTERVAL = 20;
+    public static List<Material> AUTO_SAPLING_MATERIALS = new ArrayList<>();
 
     public static boolean ENABLE_LUCK = false;
     public static double LUCK_MULTIPLIER = 1.0;
@@ -129,6 +136,20 @@ public final class CutterConfig extends STConfig {
 
         PREVENT_TOOL_BREAK = check("options.prevent-tool-break", PREVENT_TOOL_BREAK);
 
+        AUTO_SAPLING_ENABLED = check("options.auto-sapling.enabled", AUTO_SAPLING_ENABLED);
+        AUTO_SAPLING_DELAY = check("options.auto-sapling.delay", AUTO_SAPLING_DELAY);
+        AUTO_SAPLING_CHECK_INTERVAL = check("options.auto-sapling.check-interval", AUTO_SAPLING_CHECK_INTERVAL);
+        if (!config.contains("options.auto-sapling.materials")) {
+            AUTO_SAPLING_MATERIALS = defaultAutoSaplingMaterials();
+        }
+        AUTO_SAPLING_MATERIALS = check("options.auto-sapling.materials", AUTO_SAPLING_MATERIALS);
+        if (AUTO_SAPLING_DELAY < 0) {
+            set("options.auto-sapling.delay", AUTO_SAPLING_DELAY = 0);
+        }
+        if (AUTO_SAPLING_CHECK_INTERVAL <= 0) {
+            set("options.auto-sapling.check-interval", AUTO_SAPLING_CHECK_INTERVAL = 20);
+        }
+
         ENABLE_LUCK = check("enchantments.fortune.enabled", ENABLE_LUCK);
         LUCK_MULTIPLIER = check("enchantments.fortune.multiplier", LUCK_MULTIPLIER);
 
@@ -197,6 +218,22 @@ public final class CutterConfig extends STConfig {
     /*
      * 
      */
+
+    /*
+     * The saplings that auto-plant, by default: every sapling in the
+     * vanilla saplings tag, plus the tree-like plants that are not in
+     * that tag — azaleas, mangrove propagules and nether fungi.
+     */
+
+    private static List<Material> defaultAutoSaplingMaterials() {
+        final LinkedHashSet<Material> materials = new LinkedHashSet<>(Tag.SAPLINGS.getValues());
+        materials.add(Material.AZALEA);
+        materials.add(Material.FLOWERING_AZALEA);
+        materials.add(Material.MANGROVE_PROPAGULE);
+        materials.add(Material.CRIMSON_FUNGUS);
+        materials.add(Material.WARPED_FUNGUS);
+        return new ArrayList<>(materials);
+    }
 
     @SuppressWarnings("unchecked")
     private List<Material> check(final String path, final List<Material> input) {

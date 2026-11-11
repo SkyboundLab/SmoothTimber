@@ -20,6 +20,7 @@ import com.syntaxphoenix.spigot.smoothtimber.config.config.AddonConfig;
 import com.syntaxphoenix.spigot.smoothtimber.config.config.CutterConfig;
 import com.syntaxphoenix.spigot.smoothtimber.config.config.MessageConfig;
 import com.syntaxphoenix.spigot.smoothtimber.enchant.TimberEnchantListener;
+import com.syntaxphoenix.spigot.smoothtimber.listener.AutoSaplingListener;
 import com.syntaxphoenix.spigot.smoothtimber.listener.BlockBreakListener;
 import com.syntaxphoenix.spigot.smoothtimber.listener.BlockFallListener;
 import com.syntaxphoenix.spigot.smoothtimber.listener.BlockTrackingListener;
@@ -86,6 +87,7 @@ public class PluginUtils {
         pluginManager.registerEvents(new BlockTrackingListener(), MAIN);
         pluginManager.registerEvents(new PluginLoadListener(), MAIN);
         pluginManager.registerEvents(new TimberEnchantListener(), MAIN);
+        pluginManager.registerEvents(new AutoSaplingListener(), MAIN);
     }
 
     private void registerCommands() {

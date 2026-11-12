@@ -20,58 +20,66 @@ public final class VersionExchanger {
         if (VERSION_CHANGER != null) {
             return VERSION_CHANGER;
         }
+
         final MCVersionResult result = MCVersion.getCoreVersionResult();
+
         switch (result.state()) {
-        case UNTESTED:
-            PluginUtils.sendConsoleMessage(false,
-                Message.GLOBAL_PREFIX.colored() + ' ' + Message.STARTUP_VERSION_UNTESTED_MSG.colored(new String[][] {
-                    {
-                        "%minecraft%",
-                        MCVersion.getMinecraftVersion().toString()
-                    },
-                    {
-                        "%core%",
-                        result.version().name()
-                    }
-                }));
-            PluginUtils.sendConsoleMessage(false,
-                Message.GLOBAL_PREFIX.colored() + ' ' + Message.STARTUP_VERSION_UNTESTED_VERSIONS.colored(new String[][] {
-                    {
-                        "%versions%",
-                        result.version().getKnownSupported().stream().map(Version::toString)
-                            .collect(Collectors.joining(Message.GLOBAL_LIST222SPLIT.message()))
-                    }
-                }));
-            return VERSION_CHANGER = result.version().create();
-        case SUPPORTED:
-            PluginUtils.sendConsoleMessage(false,
-                Message.GLOBAL_PREFIX.colored() + ' ' + Message.STARTUP_VERSION_SUPPORTED.colored(new String[][] {
-                    {
-                        "%minecraft%",
-                        MCVersion.getMinecraftVersion().toString()
-                    },
-                    {
-                        "%core%",
-                        result.version().name()
-                    }
-                }));
-            return VERSION_CHANGER = result.version().create();
-        default:
-            break;
+            case UNTESTED:
+                PluginUtils.sendConsoleMessage(false,
+                    Message.GLOBAL_PREFIX.colored() + ' ' + Message.STARTUP_VERSION_UNTESTED_MSG.colored(new String[][] {
+                        {
+                            "%minecraft%",
+                            MCVersion.getMinecraftVersion().toString()
+                        },
+                        {
+                            "%core%",
+                            result.version().name()
+                        }
+                    }));
+                PluginUtils.sendConsoleMessage(false,
+                    Message.GLOBAL_PREFIX.colored() + ' ' + Message.STARTUP_VERSION_UNTESTED_VERSIONS.colored(new String[][] {
+                        {
+                            "%versions%",
+                            result.version().getKnownSupported().stream().map(Version::toString)
+                                .collect(Collectors.joining(Message.GLOBAL_LIST222SPLIT.message()))
+                        }
+                    }));
+                return VERSION_CHANGER = result.version().create();
+            case SUPPORTED:
+                PluginUtils.sendConsoleMessage(false,
+                    Message.GLOBAL_PREFIX.colored() + ' ' + Message.STARTUP_VERSION_SUPPORTED.colored(new String[][] {
+                        {
+                            "%minecraft%",
+                            MCVersion.getMinecraftVersion().toString()
+                        },
+                        {
+                            "%core%",
+                            result.version().name()
+                        }
+                    }));
+                return VERSION_CHANGER = result.version().create();
+            default:
+                break;
         }
+
         PluginUtils.sendConsoleMessage(false,
             Message.GLOBAL_PREFIX.colored() + ' ' + Message.STARTUP_VERSION_UNSUPPORTED.colored(new String[] {
                 "%minecraft%",
                 MCVersion.getMinecraftVersion().toString()
-            }));
+            })
+        );
+
         PluginUtils.sendConsoleMessage(false, Message.GLOBAL_PREFIX.colored() + ' ' + Message.STARTUP_VERSION_NEED222UPDATE.colored());
+
         PluginUtils.sendConsoleMessage(false,
             Message.GLOBAL_PREFIX.colored() + ' ' + Message.STARTUP_VERSION_VERSIONS.colored(new String[] {
                 "%versions%",
-                MCVersion.getAllKnownSupported().stream().map(Version::toString)
-                    .collect(Collectors.joining(Message.GLOBAL_LIST222SPLIT.message()))
-            }));
+                MCVersion.getAllKnownSupported().stream().map(Version::toString).collect(Collectors.joining(Message.GLOBAL_LIST222SPLIT.message()))
+            })
+        );
+
         Bukkit.getPluginManager().disablePlugin(PluginUtils.MAIN);
+
         return VERSION_CHANGER = new NOPChanger();
     }
 

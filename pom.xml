@@ -13,7 +13,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.package.id>smoothtimber</java.package.id>
         <project.roaster.version>2.28.0.Final</project.roaster.version>
-        <server.version>1.21.8-R0.1-SNAPSHOT</server.version>
+        <spigot.version>26.3-R0.1-SNAPSHOT</spigot.version>
+        <folia.version>26.3.build.6-alpha</folia.version>
+        <paper.version>26.3.build.248-stable</paper.version>
     </properties>
 
     <build>
@@ -59,7 +61,7 @@
                             <shadedPattern>
                                 com.syntaxphoenix.spigot.smoothtimber.shaded.syntaxapi</shadedPattern>
                         </relocation>
-                        
+
                         <!-- Compatibilities -->
                         <relocation>
                             <pattern>net.coreprotect.v1</pattern>
@@ -366,7 +368,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>${server.version}</version>
+            <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -375,7 +377,14 @@
         <dependency>
             <groupId>dev.folia</groupId>
             <artifactId>folia-api</artifactId>
-            <version>${server.version}</version>
+            <version>${folia.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>${paper.version}</version>
             <scope>provided</scope>
         </dependency>
 

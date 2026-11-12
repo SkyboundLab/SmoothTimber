@@ -14,15 +14,16 @@ public class BlockyLog extends CompatibilityAddon {
     @Override
     public void onEnable(final PluginPackage pluginPackage, final SmoothTimber smoothTimber) throws Exception {
         switch (pluginPackage.getVersion().major()) {
-        case 1:
-            resolver = new BlockyLogResolver_v1_x();
-            break;
-        case 2:
-            resolver = new BlockyLogResolver_v2_x();
-            break;
-        default:
-            throw new IncompatiblePluginException(pluginPackage, "1.X", "2.X");
+            case 1:
+                resolver = new BlockyLogResolver_v1_x();
+                break;
+            case 2:
+                resolver = new BlockyLogResolver_v2_x();
+                break;
+            default:
+                throw new IncompatiblePluginException(pluginPackage, "1.X", "2.X");
         }
+
         Locator.setLocationResolver(resolver);
     }
 

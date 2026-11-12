@@ -37,6 +37,7 @@ public class SmoothTimber extends JavaPlugin {
         if (!PluginUtils.CHANGER.isValid()) {
             return;
         }
+
         STORAGE = new ToggleStorage();
 
         // Load classes
@@ -49,6 +50,7 @@ public class SmoothTimber extends JavaPlugin {
         if (PluginUtils.CHANGER == null || !PluginUtils.CHANGER.isValid()) {
             return;
         }
+
         Platform.shutdown();
         CooldownHelper.COOLDOWN.getTimer().kill();
     }
@@ -57,6 +59,7 @@ public class SmoothTimber extends JavaPlugin {
         final ArrayList<Location> woodBlocks, final int limit) {
 
         final AsyncPlayerChopTreeEvent event = new AsyncPlayerChopTreeEvent(player, location, change, tool, woodBlocks, limit);
+
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
@@ -64,8 +67,10 @@ public class SmoothTimber extends JavaPlugin {
                 "%reason%",
                 event.getReason().orElse(DefaultReason.UNKNOWN).getMessage()
             }));
+
             return true;
         }
+
         return false;
     }
 

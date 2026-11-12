@@ -44,6 +44,7 @@ public final class v1_20xChanger implements VersionChanger {
         if (!CutterConfig.ENABLE_CUTTER_PERMISSIONS || item == null) {
             return true;
         }
+
         return VersionExchanger.checkPermission(item.getType().name().toLowerCase(), player);
     }
 
@@ -61,23 +62,30 @@ public final class v1_20xChanger implements VersionChanger {
                 return stack;
             }
         }
+
         final ItemMeta meta = stack.getItemMeta();
         if (meta == null || meta.isUnbreakable()) {
             return stack;
         }
+
         if (meta instanceof Damageable) {
             final Damageable dmg = (Damageable) meta;
             final int damage = dmg.getDamage() + 1;
+
             if (CutterConfig.PREVENT_TOOL_BREAK && stack.getType().getMaxDurability() - damage < 1) {
                 return null;
             }
+
             if (stack.getType().getMaxDurability() - damage < 0) {
                 stack.setAmount(0);
                 return null;
             }
+
             dmg.setDamage(damage);
         }
+
         stack.setItemMeta(meta);
+
         return stack;
     }
 
@@ -123,6 +131,7 @@ public final class v1_20xChanger implements VersionChanger {
         if (!CutterConfig.ENABLE_WOOD_PERMISSIONS || type == null) {
             return true;
         }
+
         return VersionExchanger.checkPermission(type, p);
     }
 
@@ -154,7 +163,9 @@ public final class v1_20xChanger implements VersionChanger {
     @Override
     public Entity toFallingBlock(final Block block) {
         final BlockData data = block.getBlockData();
+
         block.setType(Material.AIR);
+
         return block.getWorld().spawnFallingBlock(block.getLocation().add(0.5, 0.2, 0.5), data);
     }
 
@@ -166,99 +177,101 @@ public final class v1_20xChanger implements VersionChanger {
     @Override
     public boolean isSupported(final WoodType type) {
         switch (type) {
-        case OAK:
-        case SPRUCE:
-        case BIRCH:
-        case JUNGLE:
-        case ACACIA:
-        case DARKOAK:
-        case CRIMSON:
-        case WARPED:
-        case MANGROVE:
-        case CHERRY:
-        case OTHER:
-            return true;
-        default:
-            return false;
+            case OAK:
+            case SPRUCE:
+            case BIRCH:
+            case JUNGLE:
+            case ACACIA:
+            case DARKOAK:
+            case CRIMSON:
+            case WARPED:
+            case MANGROVE:
+            case CHERRY:
+            case OTHER:
+                return true;
+            default:
+                return false;
         }
     }
 
     @Override
     public WoodType getWoodTypeFromBlock(final Block block) {
         final Material blockMaterial = block.getBlockData().getMaterial();
+
         if (CutterConfig.ENABLE_INCLUSION && CutterConfig.INCLUDED_MATERIALS.contains(blockMaterial)) {
             return WoodType.OTHER;
         }
+
         return getWoodType(blockMaterial);
     }
 
     @Override
     public WoodType getWoodType(final Material type, final int id) {
         switch (type) {
-        case OAK_LOG:
-        case OAK_WOOD:
-        case OAK_FENCE:
-        case STRIPPED_OAK_LOG:
-        case STRIPPED_OAK_WOOD:
-            return WoodType.OAK;
-        case SPRUCE_LOG:
-        case SPRUCE_WOOD:
-        case SPRUCE_FENCE:
-        case STRIPPED_SPRUCE_LOG:
-        case STRIPPED_SPRUCE_WOOD:
-            return WoodType.SPRUCE;
-        case BIRCH_LOG:
-        case BIRCH_WOOD:
-        case BIRCH_FENCE:
-        case STRIPPED_BIRCH_LOG:
-        case STRIPPED_BIRCH_WOOD:
-            return WoodType.BIRCH;
-        case JUNGLE_LOG:
-        case JUNGLE_WOOD:
-        case JUNGLE_FENCE:
-        case STRIPPED_JUNGLE_LOG:
-        case STRIPPED_JUNGLE_WOOD:
-            return WoodType.JUNGLE;
-        case DARK_OAK_LOG:
-        case DARK_OAK_WOOD:
-        case DARK_OAK_FENCE:
-        case STRIPPED_DARK_OAK_LOG:
-        case STRIPPED_DARK_OAK_WOOD:
-            return WoodType.DARKOAK;
-        case ACACIA_LOG:
-        case ACACIA_WOOD:
-        case ACACIA_FENCE:
-        case STRIPPED_ACACIA_LOG:
-        case STRIPPED_ACACIA_WOOD:
-            return WoodType.ACACIA;
-        case MANGROVE_LOG:
-        case MANGROVE_WOOD:
-        case MANGROVE_FENCE:
-        case STRIPPED_MANGROVE_LOG:
-        case STRIPPED_MANGROVE_WOOD:
-        case MANGROVE_ROOTS:
-        case MUDDY_MANGROVE_ROOTS:
-            return WoodType.MANGROVE;
-        case CRIMSON_STEM:
-        case CRIMSON_FENCE:
-        case CRIMSON_HYPHAE:
-        case STRIPPED_CRIMSON_STEM:
-        case STRIPPED_CRIMSON_HYPHAE:
-            return WoodType.CRIMSON;
-        case WARPED_STEM:
-        case WARPED_FENCE:
-        case WARPED_HYPHAE:
-        case STRIPPED_WARPED_STEM:
-        case STRIPPED_WARPED_HYPHAE:
-            return WoodType.WARPED;
-        case CHERRY_LOG:
-        case CHERRY_WOOD:
-        case CHERRY_FENCE:
-        case STRIPPED_CHERRY_LOG:
-        case STRIPPED_CHERRY_WOOD:
-            return WoodType.CHERRY;
-        default:
-            return WoodType.OTHER;
+            case OAK_LOG:
+            case OAK_WOOD:
+            case OAK_FENCE:
+            case STRIPPED_OAK_LOG:
+            case STRIPPED_OAK_WOOD:
+                return WoodType.OAK;
+            case SPRUCE_LOG:
+            case SPRUCE_WOOD:
+            case SPRUCE_FENCE:
+            case STRIPPED_SPRUCE_LOG:
+            case STRIPPED_SPRUCE_WOOD:
+                return WoodType.SPRUCE;
+            case BIRCH_LOG:
+            case BIRCH_WOOD:
+            case BIRCH_FENCE:
+            case STRIPPED_BIRCH_LOG:
+            case STRIPPED_BIRCH_WOOD:
+                return WoodType.BIRCH;
+            case JUNGLE_LOG:
+            case JUNGLE_WOOD:
+            case JUNGLE_FENCE:
+            case STRIPPED_JUNGLE_LOG:
+            case STRIPPED_JUNGLE_WOOD:
+                return WoodType.JUNGLE;
+            case DARK_OAK_LOG:
+            case DARK_OAK_WOOD:
+            case DARK_OAK_FENCE:
+            case STRIPPED_DARK_OAK_LOG:
+            case STRIPPED_DARK_OAK_WOOD:
+                return WoodType.DARKOAK;
+            case ACACIA_LOG:
+            case ACACIA_WOOD:
+            case ACACIA_FENCE:
+            case STRIPPED_ACACIA_LOG:
+            case STRIPPED_ACACIA_WOOD:
+                return WoodType.ACACIA;
+            case MANGROVE_LOG:
+            case MANGROVE_WOOD:
+            case MANGROVE_FENCE:
+            case STRIPPED_MANGROVE_LOG:
+            case STRIPPED_MANGROVE_WOOD:
+            case MANGROVE_ROOTS:
+            case MUDDY_MANGROVE_ROOTS:
+                return WoodType.MANGROVE;
+            case CRIMSON_STEM:
+            case CRIMSON_FENCE:
+            case CRIMSON_HYPHAE:
+            case STRIPPED_CRIMSON_STEM:
+            case STRIPPED_CRIMSON_HYPHAE:
+                return WoodType.CRIMSON;
+            case WARPED_STEM:
+            case WARPED_FENCE:
+            case WARPED_HYPHAE:
+            case STRIPPED_WARPED_STEM:
+            case STRIPPED_WARPED_HYPHAE:
+                return WoodType.WARPED;
+            case CHERRY_LOG:
+            case CHERRY_WOOD:
+            case CHERRY_FENCE:
+            case STRIPPED_CHERRY_LOG:
+            case STRIPPED_CHERRY_WOOD:
+                return WoodType.CHERRY;
+            default:
+                return WoodType.OTHER;
         }
     }
 

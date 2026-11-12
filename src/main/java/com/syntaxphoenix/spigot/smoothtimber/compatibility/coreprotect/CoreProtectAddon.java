@@ -29,25 +29,29 @@ public class CoreProtectAddon extends CompatibilityAddon {
         if (compat != null) {
             return;
         }
+
         switch (MCVersion.getCoreVersion()) {
-        case v1_8x:
-        case v1_9x:
-        case v1_11x:
-            compat = new CoreCompat_v1_8_x(pluginPackage.getPlugin(), PluginUtils.CHANGER);
-            break;
-        case v1_13x:
-        case v1_16x:
-        case v1_19x:
-        case v1_20x:
-        case v1_21_9Below:
-        case v1_21_9AndAbove:
-            compat = new CoreCompat_v1_13_x(pluginPackage.getPlugin());
-            break;
-        default:
-            return;
+            case v1_8x:
+            case v1_9x:
+            case v1_11x:
+                compat = new CoreCompat_v1_8_x(pluginPackage.getPlugin(), PluginUtils.CHANGER);
+                break;
+            case v1_13x:
+            case v1_16x:
+            case v1_19x:
+            case v1_20x:
+            case v1_21_9Below:
+            case v1_21_9AndAbove:
+                compat = new CoreCompat_v1_13_x(pluginPackage.getPlugin());
+                break;
+            default:
+                return;
         }
+
         resolver = new CoreProtectResolver(service = Executors.newCachedThreadPool(), compat);
+
         Locator.setLocationResolver(resolver);
+
         Bukkit.getPluginManager().registerEvents(chopListener = new CoreProtectChopListener(compat), smoothTimber);
         Bukkit.getPluginManager().registerEvents(growListener = new CoreProtectGrowListener(compat), smoothTimber);
     }
@@ -57,18 +61,22 @@ public class CoreProtectAddon extends CompatibilityAddon {
         if (compat != null) {
             compat = null;
         }
+
         if (resolver != null) {
             resolver = null;
             Locator.setLocationResolver(null);
         }
+
         if (chopListener != null) {
             HandlerList.unregisterAll(chopListener);
             chopListener = null;
         }
+
         if (growListener != null) {
             HandlerList.unregisterAll(growListener);
             growListener = null;
         }
+
         if (service != null) {
             service.shutdownNow().clear();
         }

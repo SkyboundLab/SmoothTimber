@@ -17,11 +17,12 @@ public final class VersionConstant {
             } catch (NoSuchFieldException | SecurityException e) {
                 continue;
             }
+
             try {
                 return type.cast(field.get(null));
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-            }
+            } catch (IllegalArgumentException | IllegalAccessException e) {}
         }
+
         return null;
     }
 

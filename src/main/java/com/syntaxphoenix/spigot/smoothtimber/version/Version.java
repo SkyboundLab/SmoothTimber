@@ -10,13 +10,16 @@ public final class Version implements Comparable<Version> {
         if (string.isBlank()) {
             return ZERO;
         }
+
         String[] parts = string.contains(".") ? string.split("\\.")
             : new String[] {
                 string
             };
+
         int major = 0;
         int minor = 0;
         int patch = 0;
+
         try {
             major = Integer.parseInt(parts[0]);
             if (parts.length >= 2) {
@@ -25,11 +28,12 @@ public final class Version implements Comparable<Version> {
                     patch = Integer.parseInt(parts[2]);
                 }
             }
-        } catch (NumberFormatException nfe) {
-        }
+        } catch (NumberFormatException nfe) {}
+
         if (major == 0 && minor == 0 && patch == 0) {
             return ZERO;
         }
+
         return new Version(major, minor, patch);
     }
 
@@ -93,10 +97,13 @@ public final class Version implements Comparable<Version> {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+
         builder.append(major).append('.').append(minor);
+
         if (patch != 0) {
             builder.append('.').append(patch);
         }
+
         return builder.toString();
     }
 
@@ -105,9 +112,11 @@ public final class Version implements Comparable<Version> {
         if (this == obj) {
             return true;
         }
+
         if (obj == null || !(obj instanceof Version)) {
             return false;
         }
+
         return isSimilar((Version) obj);
     }
 
@@ -118,14 +127,17 @@ public final class Version implements Comparable<Version> {
         } else if (o == null) {
             return -1;
         }
+
         int comp = Integer.compare(major, o.major);
         if (comp != 0) {
             return comp;
         }
+
         comp = Integer.compare(minor, o.minor);
         if (comp != 0) {
             return comp;
         }
+
         return Integer.compare(patch, o.patch);
     }
 

@@ -62,32 +62,32 @@ public class SmoothTimberPlaceholders extends PlaceholderExpansion {
 
     public Object getWithoutPlayer(final String identifier) {
         switch (identifier) {
-        case "cutter_radius":
-            return CutterConfig.CHECK_RADIUS;
-        case "cutter_depth":
-            return CutterConfig.ROOT_DEPTH;
-        case "enchantment_unbreaking_state":
-            return CutterConfig.ENABLE_UNBREAKING;
-        case "enchantment_fortune_state":
-            return CutterConfig.ENABLE_LUCK;
-        case "enchantment_fortune_multiplier":
-            return CutterConfig.LUCK_MULTIPLIER;
+            case "cutter_radius":
+                return CutterConfig.CHECK_RADIUS;
+            case "cutter_depth":
+                return CutterConfig.ROOT_DEPTH;
+            case "enchantment_unbreaking_state":
+                return CutterConfig.ENABLE_UNBREAKING;
+            case "enchantment_fortune_state":
+                return CutterConfig.ENABLE_LUCK;
+            case "enchantment_fortune_multiplier":
+                return CutterConfig.LUCK_MULTIPLIER;
         }
         return null;
     }
 
     public Object getWithPlayer(final Player player, final String identifier) {
         switch (identifier) {
-        case "player_active":
-            return PlayerState.isActive(player);
-        case "player_toggled":
-            return PlayerState.isToggled(player);
-        case "player_world":
-            return PlayerState.isWorldEnabled(player);
-        case "player_permitted":
-            return PlayerState.isPermitted(player);
-        case "player_break_limit":
-            return Limiter.getLimit(player);
+            case "player_active":
+                return PlayerState.isActive(player);
+            case "player_toggled":
+                return PlayerState.isToggled(player);
+            case "player_world":
+                return PlayerState.isWorldEnabled(player);
+            case "player_permitted":
+                return PlayerState.isPermitted(player);
+            case "player_break_limit":
+                return Limiter.getLimit(player);
         }
         return getWithoutPlayer(identifier);
     }

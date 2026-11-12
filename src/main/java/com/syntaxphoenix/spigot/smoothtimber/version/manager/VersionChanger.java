@@ -56,14 +56,18 @@ public interface VersionChanger {
 
     default void dropItemByFallingBlock(final FallingBlock block, final int amount) {
         final ItemStack item = getItemFromFallingBlock(block);
+
         item.setAmount(amount);
+
         block.getWorld().dropItemNaturally(block.getLocation(), item);
     }
 
     default void dropItemByBlock(final Block block, final int amount) {
         final ItemStack item = getItemFromBlock(block);
+
         item.setAmount(amount);
         setAirBlock(block);
+
         block.getWorld().dropItemNaturally(block.getLocation(), item);
     }
 

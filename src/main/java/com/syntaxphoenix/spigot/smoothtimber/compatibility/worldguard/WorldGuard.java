@@ -16,21 +16,21 @@ public class WorldGuard extends CompatibilityAddon {
     @Override
     public void onEnable(final PluginPackage pluginPackage, final SmoothTimber smoothTimber) {
         switch (MCVersion.getCoreVersion()) {
-        case v1_8x:
-        case v1_9x:
-        case v1_11x:
-            listener = new WorldGuardChopListener_v6_x();
-            break;
-        case v1_13x:
-        case v1_16x:
-        case v1_19x:
-        case v1_20x:
-        case v1_21_9Below:
-        case v1_21_9AndAbove:
-            listener = new WorldGuardChopListener_v7_x();
-            break;
-        default:
-            return;
+            case v1_8x:
+            case v1_9x:
+            case v1_11x:
+                listener = new WorldGuardChopListener_v6_x();
+                break;
+            case v1_13x:
+            case v1_16x:
+            case v1_19x:
+            case v1_20x:
+            case v1_21_9Below:
+            case v1_21_9AndAbove:
+                listener = new WorldGuardChopListener_v7_x();
+                break;
+            default:
+                return;
         }
         Bukkit.getPluginManager().registerEvents(listener, smoothTimber);
     }

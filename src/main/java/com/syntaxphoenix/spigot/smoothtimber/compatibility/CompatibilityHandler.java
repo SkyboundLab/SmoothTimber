@@ -50,7 +50,9 @@ public abstract class CompatibilityHandler {
         if (COMPAT.containsKey(pluginName) || isAddonRegistered(addonClass)) {
             return false;
         }
+
         COMPAT.put(pluginName, new CompatAddon<>(addonClass));
+
         return true;
     }
 
@@ -64,8 +66,7 @@ public abstract class CompatibilityHandler {
 
     @SuppressWarnings("unchecked")
     public static <E extends CompatibilityAddon> Optional<E> getAddon(final Class<E> addonClass) {
-        return COMPAT.values().stream().unordered().filter(addon -> addon.getOwner().equals(addonClass)).findFirst()
-            .flatMap(CompatAddon::getInstance).map(addon -> (E) addon);
+        return COMPAT.values().stream().unordered().filter(addon -> addon.getOwner().equals(addonClass)).findFirst().flatMap(CompatAddon::getInstance).map(addon -> (E) addon);
     }
 
     public static Optional<CompatibilityAddon> getAddon(final String pluginName) {
@@ -82,6 +83,7 @@ public abstract class CompatibilityHandler {
                 }
                 continue;
             }
+
             final CompatAddon<?> addon = COMPAT.get(name);
             final PluginPackage pluginPackage = optional.get();
             if (pluginPackage.getPlugin().isEnabled()) {
@@ -91,8 +93,10 @@ public abstract class CompatibilityHandler {
                 } else if (disabled) {
                     addon.shutdown();
                 }
+
                 continue;
             }
+
             if (addon.getInstance().isPresent()) {
                 addon.shutdown();
             }
@@ -130,33 +134,28 @@ public abstract class CompatibilityHandler {
             if (instance != null) {
                 return;
             }
+
             try {
-                // NB: init() must stay inside the try. Instantiating an addon
-                // loads its classes, and a missing optional dependency's API
-                // throws NoClassDefFoundError (a LinkageError, not an
-                // Exception) — e.g. PlaceholderAPI's PlaceholderExpansion
-                // when its classes are not visible to this plugin. A broken
-                // optional addon must never kill onEnable, so LinkageError
-                // is caught here alongside Exception and the addon is
-                // skipped with a console message instead.
                 instance = (CompatibilityAddon) reflect.init();
-                PluginUtils.sendConsoleMessage(true,
-                    "&7Trying to enable compatibility addon '&3" + name + "&7' for plugin '&3" + pluginPackage.getName() + "&7'...");
+
+                PluginUtils.sendConsoleMessage(true, "&7Trying to enable compatibility addon '&3" + name + "&7' for plugin '&3" + pluginPackage.getName() + "&7'...");
+
                 instance.onEnable(pluginPackage, JavaPlugin.getPlugin(SmoothTimber.class));
+
                 if (instance.hasConfig()) {
-                    PluginUtils.sendConsoleMessage(true, "&7Trying to load config of compatibility addon '&3" + name + "&7' for plugin '&3"
-                        + pluginPackage.getName() + "&7'...");
+                    PluginUtils.sendConsoleMessage(true, "&7Trying to load config of compatibility addon '&3" + name + "&7' for plugin '&3" + pluginPackage.getName() + "&7'...");
                     instance.getConfig().reload();
                 }
-                PluginUtils.sendConsoleMessage(true,
-                    "&7Successfully enabled compatbility addon '&3" + name + "&7' for plugin '&3" + pluginPackage.getName() + "&7'...");
+
+                PluginUtils.sendConsoleMessage(true, "&7Successfully enabled compatbility addon '&3" + name + "&7' for plugin '&3" + pluginPackage.getName() + "&7'...");
             } catch (final IncompatiblePluginException pluginException) {
                 instance = null;
+
                 PluginUtils.sendConsoleMessage(true, Exceptions.stackTraceToString(pluginException));
             } catch (final LinkageError | Exception exception) {
                 instance = null;
-                PluginUtils.sendConsoleMessage(true,
-                    "&7Failed to enable compatibility addon '&3" + name + "&7' for plugin '&3" + pluginPackage.getName() + "&7'!");
+
+                PluginUtils.sendConsoleMessage(true, "&7Failed to enable compatibility addon '&3" + name + "&7' for plugin '&3" + pluginPackage.getName() + "&7'!");
             }
         }
 
@@ -164,15 +163,17 @@ public abstract class CompatibilityHandler {
             if (instance == null) {
                 return;
             }
+
             try {
                 if (instance.hasConfig()) {
                     instance.getConfig().unload();
                 }
+
                 instance.onDisable(JavaPlugin.getPlugin(SmoothTimber.class));
             } catch (final Exception exception) {
-                PluginUtils.sendConsoleMessage(true,
-                    "&bFailed to disable compatibility addon " + owner.getSimpleName().split("\\.")[0] + "&7'!");
+                PluginUtils.sendConsoleMessage(true, "&bFailed to disable compatibility addon " + owner.getSimpleName().split("\\.")[0] + "&7'!");
             }
+
             instance = null;
         }
 

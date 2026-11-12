@@ -78,7 +78,7 @@ public final class CutterConfig extends STConfig {
     public static boolean INSTANT_COLLECT = false;
 
     /*
-     * 
+     *
      */
 
     private CutterConfig() {
@@ -142,16 +142,17 @@ public final class CutterConfig extends STConfig {
         AUTO_SAPLING_MODE = check("options.auto-sapling.mode", AUTO_SAPLING_MODE);
         AUTO_SAPLING_MODE = AUTO_SAPLING_MODE == null ? "dropped" : AUTO_SAPLING_MODE.trim().toLowerCase();
         if (!AUTO_SAPLING_MODE.equals("dropped") && !AUTO_SAPLING_MODE.equals("replant")) {
-            getLogger().warning("Unknown auto-sapling mode '" + AUTO_SAPLING_MODE
-                + "' (expected 'dropped' or 'replant'); using 'dropped'.");
+            getLogger().warning("Unknown auto-sapling mode '" + AUTO_SAPLING_MODE + "' (expected 'dropped' or 'replant'); using 'dropped'.");
             set("options.auto-sapling.mode", AUTO_SAPLING_MODE = "dropped");
         }
+
         AUTO_SAPLING_REPLANT = AUTO_SAPLING_MODE.equals("replant");
         AUTO_SAPLING_DELAY = check("options.auto-sapling.delay", AUTO_SAPLING_DELAY);
         AUTO_SAPLING_CHECK_INTERVAL = check("options.auto-sapling.check-interval", AUTO_SAPLING_CHECK_INTERVAL);
         if (!config.contains("options.auto-sapling.materials")) {
             AUTO_SAPLING_MATERIALS = defaultAutoSaplingMaterials();
         }
+
         AUTO_SAPLING_MATERIALS = check("options.auto-sapling.materials", AUTO_SAPLING_MATERIALS);
         if (AUTO_SAPLING_DELAY < 0) {
             set("options.auto-sapling.delay", AUTO_SAPLING_DELAY = 0);
@@ -172,8 +173,7 @@ public final class CutterConfig extends STConfig {
             set("enchantments.timber.table-chance", TIMBER_ENCHANTMENT_TABLE_CHANCE = 1.0);
         }
         if (TIMBER_ENCHANTMENT_ENABLED && !TimberEnchantment.isRegistered()) {
-            getLogger().warning(
-                "Timber enchantment gating is enabled, but the Timber enchantment is not registered on this server (it needs Paper 1.21+). Timber will work without the enchantment until then.");
+            getLogger().warning("Timber enchantment gating is enabled, but the Timber enchantment is not registered on this server (it needs Paper 1.21+). Timber will work without the enchantment until then.");
         }
 
         ENABLE_EXCLUSION = check("exclusion.enabled", ENABLE_EXCLUSION);
@@ -226,7 +226,7 @@ public final class CutterConfig extends STConfig {
     }
 
     /*
-     * 
+     *
      */
 
     /*

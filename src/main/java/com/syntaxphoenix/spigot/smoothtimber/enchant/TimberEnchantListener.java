@@ -30,23 +30,24 @@ public final class TimberEnchantListener implements Listener {
         if (!CutterConfig.TIMBER_ENCHANTMENT_ENABLED || !TimberEnchantment.isRegistered()) {
             return;
         }
+
         final ItemStack item = event.getItem();
         if (!TimberEnchantment.isAxe(item)) {
             return;
         }
+
         final Enchantment timber = TimberEnchantment.get();
         final EnchantmentOffer[] offers = event.getOffers();
         for (final EnchantmentOffer offer : offers) {
             if (offer != null && timber.equals(offer.getEnchantment())) {
-                // The vanilla table already offers Timber.
                 return;
             }
         }
+
         if (Math.random() >= CutterConfig.TIMBER_ENCHANTMENT_TABLE_CHANCE) {
             return;
         }
-        // Replace the most expensive non-empty offer slot, keeping its shown
-        // level cost so the player pays exactly what the table displayed.
+
         int slot = -1;
         for (int index = offers.length - 1; index >= 0; index--) {
             if (offers[index] != null) {
@@ -54,9 +55,11 @@ public final class TimberEnchantListener implements Listener {
                 break;
             }
         }
+
         if (slot < 0) {
             return;
         }
+
         offers[slot] = new EnchantmentOffer(timber, TimberEnchantment.MAX_LEVEL, event.getExpLevelCostsOffered()[slot]);
     }
 
@@ -65,12 +68,12 @@ public final class TimberEnchantListener implements Listener {
         if (!CutterConfig.TIMBER_ENCHANTMENT_ENABLED || !TimberEnchantment.isRegistered()) {
             return;
         }
+
         if (!TimberEnchantment.isAxe(event.getItem())) {
             return;
         }
+
         final Enchantment timber = TimberEnchantment.get();
-        // Safety net: if the player picked a Timber offer, make sure the
-        // enchantment actually lands on the item.
         if (timber.equals(event.getEnchantmentHint()) && !event.getEnchantsToAdd().containsKey(timber)) {
             event.getEnchantsToAdd().put(timber, event.getLevelHint());
         }

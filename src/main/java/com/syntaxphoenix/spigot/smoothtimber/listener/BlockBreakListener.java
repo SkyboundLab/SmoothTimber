@@ -44,6 +44,7 @@ public class BlockBreakListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
+
         final VersionChanger change = PluginUtils.CHANGER;
         if (!change.isWoodBlock(event.getBlock().getState())) {
             return;
@@ -62,50 +63,55 @@ public class BlockBreakListener implements Listener {
             }
         }
 
-        if (CutterConfig.SNEAK.test(() -> player.isSneaking())
-            || CutterConfig.TOGGLEABLE.test(() -> SmoothTimber.STORAGE.hasToggled(player.getUniqueId()))) {
+        if (CutterConfig.SNEAK.test(() -> player.isSneaking()) || CutterConfig.TOGGLEABLE.test(() -> SmoothTimber.STORAGE.hasToggled(player.getUniqueId()))) {
             return;
         }
 
         if (CutterConfig.ENABLE_COOLDOWN && CooldownHelper.isTriggered(player.getUniqueId())) {
             final String time = CooldownHelper.getFormattedTime(player.getUniqueId());
+
             player.sendMessage(Message.GLOBAL_PREFIX.colored() + ' ' + Message.COOLDOWN_WAIT.colored(new String[] {
                 "%time%",
                 time
             }));
+
             event.setCancelled(true);
             return;
         }
 
         if (change.hasCuttingItemInHand(player)) {
             final ItemStack tool = change.getItemInHand(player);
-            // Timber only triggers on axes carrying the Timber enchantment
-            // (Paper 1.21+, where the enchantment is registered). On servers
-            // without the enchantment the check is skipped and timber behaves
-            // as before; see CutterConfig for the toggle.
             if (CutterConfig.TIMBER_ENCHANTMENT_ENABLED && TimberEnchantment.isRegistered()
                 && !TimberEnchantment.hasTimber(tool)) {
                 return;
             }
+
             if (!change.hasPermissionForCuttingItem(player, tool)) {
                 return;
             }
+
             final Location location = event.getBlock().getLocation();
             if (Locator.isPlayerPlaced(location)) {
                 return;
             }
+
             event.setCancelled(true);
             CooldownHelper.trigger(player);
+
             Platform.getPlatform().asyncTask((Runnable) () -> {
                 final int maxItems = CutterConfig.ENABLE_LUCK ? change.getMaxDropCount(tool) : 1;
                 final ArrayList<Location> woodBlocks = new ArrayList<>();
                 final int limit = Limiter.getLimit(player);
+
                 Locator.locateWood(location, woodBlocks, limit);
+
                 if (SmoothTimber.triggerChopEvent(player, location, change, tool, woodBlocks, limit)) {
                     CooldownHelper.reset(player);
                     return;
                 }
+
                 SmoothTimber.triggerChoppedEvent(player, location, change, tool, woodBlocks, limit);
+
                 Platform.getPlatform().regionalSyncTask(location, new Runnable() {
                     @Override
                     public void run() {
@@ -124,8 +130,11 @@ public class BlockBreakListener implements Listener {
                                     }
                                     break;
                                 }
+
                                 event.add(wood);
+
                                 felledLogs.put(woodBlock, block.getType());
+
                                 final int amount = maxItems <= 1 ? maxItems : generateAmount(maxItems);
                                 if (animated) {
                                     final Entity entity = change.toFallingBlock(block);
@@ -135,18 +144,22 @@ public class BlockBreakListener implements Listener {
                                     }
                                     continue;
                                 }
+
                                 if (collect) {
                                     final ItemStack stack = change.getItemFromBlock(block);
                                     stack.setAmount(amount);
                                     player.getInventory().addItem(stack);
                                     continue;
                                 }
+
                                 change.dropItemByBlock(block, amount);
                             }
                         }
+
                         if (CutterConfig.AUTO_SAPLING_ENABLED && CutterConfig.AUTO_SAPLING_REPLANT && !felledLogs.isEmpty()) {
                             TreeReplanter.replant(player, felledLogs);
                         }
+
                         Platform.getPlatform().asyncTask(() -> SmoothTimber.triggerFallEvent(event));
                     }
 
@@ -156,6 +169,7 @@ public class BlockBreakListener implements Listener {
                         float previous = more * 2f;
                         float next = more * 3f;
                         final float chance = generator.nextFloat() * (float) CutterConfig.LUCK_MULTIPLIER;
+
                         while (true) {
                             if ((previous >= chance) || (chance <= next)) {
                                 if (previous < chance && chance < next) {
@@ -163,10 +177,12 @@ public class BlockBreakListener implements Listener {
                                 }
                                 break;
                             }
+
                             drop++;
                             previous = next;
                             next += more;
                         }
+
                         return Math.min(drop, 64);
                     }
 

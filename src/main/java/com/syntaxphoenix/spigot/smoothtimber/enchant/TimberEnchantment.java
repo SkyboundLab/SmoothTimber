@@ -28,8 +28,7 @@ public final class TimberEnchantment {
     }
 
     /**
-     * @return the registered Timber enchantment, or null when it was not
-     *         registered (Spigot or Paper below 1.21).
+     * @return the registered Timber enchantment, or null when it was not registered (Spigot or Paper below 1.21).
      */
     public static Enchantment get() {
         return Enchantment.getByKey(KEY);
@@ -53,6 +52,7 @@ public final class TimberEnchantment {
         if (item == null) {
             return false;
         }
+
         final Enchantment timber = get();
         return timber != null && item.getEnchantmentLevel(timber) > 0;
     }
@@ -66,20 +66,23 @@ public final class TimberEnchantment {
         if (item == null) {
             return false;
         }
+
         final Enchantment timber = get();
         if (timber == null) {
             return false;
         }
+
         final ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return false;
         }
-        // The item is an axe and therefore supported, but stay lenient if the
-        // safety check disagrees for any reason.
+
         if (!meta.addEnchant(timber, MAX_LEVEL, false)) {
             meta.addEnchant(timber, MAX_LEVEL, true);
         }
+
         item.setItemMeta(meta);
+
         return hasTimber(item);
     }
 

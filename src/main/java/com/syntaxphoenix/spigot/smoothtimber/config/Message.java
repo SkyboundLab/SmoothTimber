@@ -80,16 +80,9 @@ public enum Message {
     ABORT_REASON_TOWNY("it is protected by a Towny town"),
     ABORT_REASON_FACTIONS("it is protected by a faction claim"),
 
-    /*
-     *
-     */
     ;
 
     private final String message;
-
-    /*
-     *
-     */
 
     Message() {
         message = "";
@@ -99,17 +92,9 @@ public enum Message {
         this.message = message;
     }
 
-    /*
-     *
-     */
-
     public final String id() {
         return name().toLowerCase().replace('_', '.').replace("222", "-");
     }
-
-    /*
-     *
-     */
 
     public final String message() {
         final String configured = MessageConfig.MESSAGES.get(this);
@@ -128,10 +113,6 @@ public enum Message {
         return message;
     }
 
-    /*
-     *
-     */
-
     public final String colored() {
         return ChatColor.translateAlternateColorCodes('&', message());
     }
@@ -143,10 +124,6 @@ public enum Message {
     public final String colored(final String[][] replace) {
         return ChatColor.translateAlternateColorCodes('&', message(replace));
     }
-
-    /*
-     *
-     */
 
     public static final Message fromId(final String id) {
         return valueOf(id.replace("-", "222").replace('.', '_').toUpperCase());

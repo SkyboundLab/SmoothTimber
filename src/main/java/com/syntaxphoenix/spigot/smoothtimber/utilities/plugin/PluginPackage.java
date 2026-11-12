@@ -18,10 +18,6 @@ public class PluginPackage {
         update(plugin);
     }
 
-    /*
-     * 
-     */
-
     final void delete() {
         version = null;
         plugin = null;
@@ -36,10 +32,6 @@ public class PluginPackage {
         this.versionRaw = plugin.getDescription().getVersion();
         this.version = Version.fromString(versionRaw.contains("[") ? versionRaw.split("\\[")[0] : versionRaw);
     }
-
-    /*
-     * 
-     */
 
     public ReflectCache getCache() {
         return cache;
@@ -60,10 +52,6 @@ public class PluginPackage {
     public String getName() {
         return name;
     }
-
-    /*
-     * 
-     */
 
     public boolean isFromPlugin(final Plugin plugin) {
         return hasName(plugin.getName());

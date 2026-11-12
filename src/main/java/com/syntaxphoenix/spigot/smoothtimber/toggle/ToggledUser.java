@@ -13,10 +13,6 @@ public class ToggledUser {
     private final UUID uniqueId;
     private int time;
 
-    /*
-     * 
-     */
-
     public ToggledUser(final UUID uniqueId) {
         this.uniqueId = uniqueId;
         this.time = -1;
@@ -27,10 +23,6 @@ public class ToggledUser {
         this.time = time;
     }
 
-    /*
-     * 
-     */
-
     public final UUID getUniqueId() {
         return uniqueId;
     }
@@ -39,23 +31,17 @@ public class ToggledUser {
         return time;
     }
 
-    /*
-     * 
-     */
-
     protected boolean update() {
         if (time == -1) {
             return false;
         }
+
         if ((time -= 1) == 0) {
             return true;
         }
+
         return false;
     }
-
-    /*
-     * 
-     */
 
     protected void onToggle(final boolean status) {
         final Player player = Bukkit.getPlayer(uniqueId);
@@ -84,6 +70,7 @@ public class ToggledUser {
                 }
             };
         }
+
         return new String[][] {
             {
                 "%tool%",
@@ -99,9 +86,11 @@ public class ToggledUser {
             }
             return Message.TOGGLE_OFF_FOREVER;
         }
+
         if (state) {
             return timed ? Message.TOGGLE_OFF_TIMED : Message.TOGGLE_OFF_FOREVER;
         }
+
         return Message.TOGGLE_ON_FOREVER;
     }
 

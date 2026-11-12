@@ -50,23 +50,23 @@ public class PluginUtils {
 
     public PluginUtils() {
         MessageConfig.INSTANCE.reload();
+
         CHANGER = VersionExchanger.getVersionChanger();
         if (!CHANGER.isValid()) {
             return;
         }
+
         PlacedBlockTracker.setup(MAIN);
         CompatibilityHandler.registerDefaults();
         CutterConfig.INSTANCE.reload();
+
         registerCommands();
         registerListener();
         registerTasks();
         checkPlugins();
+
         STATS = new SyntaxPhoenixStats("7vTfe4hf", MAIN);
     }
-
-    /*
-     * 
-     */
 
     private void checkPlugins() {
         final PluginManager pluginManager = Bukkit.getPluginManager();
@@ -76,6 +76,7 @@ public class PluginUtils {
             }
             SETTINGS.updatePlugin(plugin, plugin.isEnabled());
         }
+
         AddonConfig.INSTANCE.reload();
         CompatibilityHandler.handleSettingsUpdate(SETTINGS);
     }
@@ -98,20 +99,8 @@ public class PluginUtils {
             plugin.setExecutor(command);
             plugin.setTabCompleter(command);
         } catch (final UnsupportedOperationException exception) {
-            // Paper plugin (loaded via paper-plugin.yml): YAML command
-            // declarations are not supported, so register the command
-            // through Paper's Brigadier API instead. This must be done
-            // reflectively: JavaPlugin#registerCommand exists in Paper's
-            // API but not in Spigot's, and the project compiles against
-            // the Spigot API, so a direct call fails the Maven build
-            // (see PluginUtils.java:104). Spigot never reaches this
-            // branch (and never loads PaperCommandAdapter).
             registerPaperCommand(command);
         }
-
-        /*
-         * 
-         */
 
         COMMANDS.register(new HelpCommand(), "help", "?");
         COMMANDS.register(new ToggleCommand(), "toggle");
@@ -120,15 +109,7 @@ public class PluginUtils {
     }
 
     /*
-     * Paper-only command registration, via reflection. Paper's
-     * JavaPlugin#registerCommand(String, String, Collection, BasicCommand)
-     * does not exist in the Spigot API the project compiles against, so
-     * neither the method nor PaperCommandAdapter may be referenced
-     * directly here — doing so breaks `mvn package` with
-     * "cannot find symbol: method registerCommand(...)". The adapter
-     * class is only loaded on this path, i.e. only on Paper, where both
-     * the method and io.papermc.paper.command.brigadier.BasicCommand
-     * exist at runtime.
+     * Paper's registerCommand is not in the Spigot API, so call it reflectively.
      */
 
     private void registerPaperCommand(final CommandRedirect command) {
@@ -136,10 +117,10 @@ public class PluginUtils {
             final Class<?> adapterClass = Class.forName("com.syntaxphoenix.spigot.smoothtimber.command.PaperCommandAdapter");
             final Object adapter = adapterClass.getConstructor(CommandRedirect.class).newInstance(command);
             final Class<?> basicCommandClass = Class.forName("io.papermc.paper.command.brigadier.BasicCommand");
+
             MAIN.getClass()
                 .getMethod("registerCommand", String.class, String.class, java.util.Collection.class, basicCommandClass)
-                .invoke(MAIN, "smoothtimber", "SmoothTimber main command",
-                    java.util.Arrays.asList("sm", "stimb"), adapter);
+                .invoke(MAIN, "smoothtimber", "SmoothTimber main command", java.util.Arrays.asList("sm", "stimb"), adapter);
         } catch (final ReflectiveOperationException exception) {
             sendConsoleError("Failed to register the smoothtimber command via the Paper Brigadier API", exception);
         }
@@ -154,8 +135,7 @@ public class PluginUtils {
      */
 
     public static void sendConsoleMessage(final boolean prefix, final String message) {
-        Bukkit.getConsoleSender()
-            .sendMessage(ChatColor.translateAlternateColorCodes('&', prefix ? Message.GLOBAL_PREFIX.message() + ' ' + message : message));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', prefix ? Message.GLOBAL_PREFIX.message() + ' ' + message : message));
     }
 
     public static void sendConsoleMessage(final boolean prefix, final String... messages) {
@@ -169,10 +149,7 @@ public class PluginUtils {
     }
 
     public static void sendConsoleError(final String reason, final Throwable throwable) {
-        PluginUtils.sendConsoleMessage(false, Arrays.merge(String[]::new, Arrays.merge(String[]::new,
-            Centering.center("&8##################################################################", "&r", "&8<=> &5Smooth&dTimber &8<=>",
-                "&7" + reason, "&r", "&8##################################################################"),
-            Exceptions.stackTraceToStringArray(throwable)), "&8##################################################################"));
+        PluginUtils.sendConsoleMessage(false, Arrays.merge(String[]::new, Arrays.merge(String[]::new, Centering.center("&8##################################################################", "&r", "&8<=> &5Smooth&dTimber &8<=>", "&7" + reason, "&r", "&8##################################################################"), Exceptions.stackTraceToStringArray(throwable)), "&8##################################################################"));
     }
 
 }

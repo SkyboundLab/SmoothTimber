@@ -77,10 +77,6 @@ public final class CutterConfig extends STConfig {
     public static boolean ENABLE_ANIMATION = true;
     public static boolean INSTANT_COLLECT = false;
 
-    /*
-     *
-     */
-
     private CutterConfig() {
         super(new File("plugins/SmoothTimber", "config.yml"), CutterMigration.class, 10);
     }
@@ -226,13 +222,8 @@ public final class CutterConfig extends STConfig {
     }
 
     /*
-     *
-     */
-
-    /*
-     * The saplings that auto-plant, by default: every sapling in the
-     * vanilla saplings tag, plus the tree-like plants that are not in
-     * that tag — azaleas, mangrove propagules and nether fungi.
+     * The default saplings: all vanilla saplings plus azaleas,
+     * propagules and nether fungi.
      */
 
     private static List<Material> defaultAutoSaplingMaterials() {

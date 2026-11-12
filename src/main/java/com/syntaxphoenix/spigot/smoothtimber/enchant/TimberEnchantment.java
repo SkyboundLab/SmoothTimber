@@ -9,14 +9,9 @@ import org.bukkit.inventory.meta.ItemMeta;
  * Access to the Timber enchantment ({@code smoothtimber:timber}).
  *
  * <p>
- * The enchantment itself is registered on Paper 1.21+ by
- * {@link TimberEnchantBootstrap} through the registry API, so it behaves like a
- * vanilla enchantment: it shows up in the enchanting table, on enchanted
- * books, in anvils and in the {@code /enchant} command. This class only uses
- * plain Bukkit API on purpose, so it is safe to load on Spigot and on older
- * Paper versions where the enchantment was never registered - in that case
- * {@link #isRegistered()} is false and timber simply stays ungated (see
- * {@code CutterConfig}).
+ * Registered on Paper 1.21+ by {@link TimberEnchantBootstrap}, so on
+ * Spigot and older Paper {@link #isRegistered()} is false and timber stays
+ * ungated.
  */
 public final class TimberEnchantment {
 
@@ -28,7 +23,7 @@ public final class TimberEnchantment {
     }
 
     /**
-     * @return the registered Timber enchantment, or null when it was not registered (Spigot or Paper below 1.21).
+     * @return the registered enchantment, or null when it is not available.
      */
     public static Enchantment get() {
         return Enchantment.getByKey(KEY);
@@ -39,14 +34,14 @@ public final class TimberEnchantment {
     }
 
     /**
-     * @return true when the given item is an axe of any material.
+     * @return true when the item is an axe.
      */
     public static boolean isAxe(final ItemStack item) {
         return item != null && item.getType().name().endsWith("_AXE");
     }
 
     /**
-     * @return true when the given item carries the Timber enchantment.
+     * @return true when the item has Timber.
      */
     public static boolean hasTimber(final ItemStack item) {
         if (item == null) {
@@ -58,9 +53,9 @@ public final class TimberEnchantment {
     }
 
     /**
-     * Applies Timber I to the given item.
+     * Applies Timber I to the item.
      *
-     * @return true when the enchantment was applied.
+     * @return true when it worked.
      */
     public static boolean applyTimber(final ItemStack item) {
         if (item == null) {

@@ -12,16 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import com.syntaxphoenix.spigot.smoothtimber.config.config.CutterConfig;
 
 /**
- * Makes sure Timber can actually be found in the enchanting table.
- *
- * <p>
- * The registered enchantment (see {@link TimberEnchantBootstrap}) is already
- * offered by the vanilla table through its primary items and the
- * {@code in_enchanting_table} tag. This listener is the safety net on top of
- * that: when an axe is enchanted and none of the three offers is Timber, one
- * offer slot is replaced with Timber I (at the slot's shown cost) with the
- * configured chance, so the enchantment is reliably obtainable without
- * grinding through the table.
+ * Makes sure Timber shows up in the enchanting table offers.
  */
 public final class TimberEnchantListener implements Listener {
 

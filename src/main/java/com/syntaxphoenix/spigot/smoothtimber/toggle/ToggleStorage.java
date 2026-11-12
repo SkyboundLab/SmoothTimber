@@ -14,25 +14,13 @@ public class ToggleStorage {
     private final List<ToggledUser> toggled = Collections.synchronizedList(new ArrayList<>());
     private final ToggleTimer timer;
 
-    /*
-     * 
-     */
-
     public ToggleStorage() {
         this.timer = new ToggleTimer(this);
     }
 
-    /*
-     * 
-     */
-
     public final ToggleTimer getTimer() {
         return timer;
     }
-
-    /*
-     * 
-     */
 
     public boolean hasToggled(final UUID uniqueId) {
         return getUser(uniqueId).isPresent();
@@ -50,25 +38,27 @@ public class ToggleStorage {
         final Optional<ToggledUser> option = getUser(uniqueId);
         if (option.isPresent()) {
             final ToggledUser user = option.get();
+
             user.onToggle(false);
             toggled.remove(user);
+
             return false;
         }
+
         final ToggledUser user = new ToggledUser(uniqueId, time);
+
         user.onToggle(true);
         toggled.add(user);
+
         return true;
     }
-
-    /*
-     * 
-     */
 
     protected void update() {
         if (CutterConfig.TOGGLEABLE.isDisabled() && !toggled.isEmpty()) {
             toggled.clear();
             return;
         }
+
         final Iterator<ToggledUser> iterator = toggled.stream().filter(ToggledUser::update).iterator();
         while (iterator.hasNext()) {
             final ToggledUser user = iterator.next();
